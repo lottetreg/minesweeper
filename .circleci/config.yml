@@ -1,14 +1,7 @@
 version: 2.1
-jobs:
-  build:
-    parallelism: 1
-    docker:
-      - image: circleci/elixir:1.8
-        environment:
-          MIX_ENV: test
 
-    working_directory: ~/minesweeper
-
+commands:
+  checkout_and_build:
     steps:
       - checkout
 
@@ -42,7 +35,65 @@ jobs:
           key: v1-build-cache
           paths: "_build"
 
+jobs:
+  test:
+    parallelism: 1
+    docker:
+      - image: circleci/elixir:1.8
+        environment:
+          MIX_ENV: test
+
+    working_directory: ~/minesweeper
+
+    steps:
+      - checkout_and_build
+
       - run: mix test
 
       - store_test_results:
           path: _build/test/lib/minesweeper
+
+  deploy:
+    docker:
+      - image: circleci/elixir:1.8
+
+    steps:
+      - checkout_and_build
+
+      - run:
+          name: Publish to Hex
+          # uses HEX_API_KEY
+          command: |
+            mix hex.publish --yes
+
+      - run:
+          name: Get Minesweeper Version
+          command: |
+            VERSION=`mix ex_app_info.version.get`
+            echo "export VERSION=$VERSION" >> $BASH_ENV
+            source $BASH_ENV
+            echo "Minesweeper Version is v${VERSION}"
+
+      - add_ssh_keys:
+          fingerprints:
+            - "7f:2b:da:23:1b:e3:11:76:7c:83:b7:c5:eb:40:25:e4"
+
+      - run:
+          name: Create and Push Git Tag
+          command: |
+            git config --global user.email "${GIT_USER_EMAIL}"
+            git config --global user.name "${GIT_USER_NAME}"
+            git tag -a v${VERSION} -m "v${VERSION}"
+            git push origin v${VERSION}
+
+workflows:
+  version: 2
+  test_and_deploy:
+    jobs:
+      - test
+      - deploy:
+          requires:
+            - test
+          filters:
+            branches:
+              only: master
