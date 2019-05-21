@@ -1,11 +1,10 @@
 # Minesweeper
 
-**TODO: Add description**
+A command-line Minesweeper game
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `minesweeper` to your list of dependencies in `mix.exs`:
+The package can be installed by adding `minesweeper` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
@@ -15,7 +14,8 @@ def deps do
 end
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/minesweeper](https://hexdocs.pm/minesweeper).
+The docs can be found at [https://hexdocs.pm/minesweeper](https://hexdocs.pm/minesweeper).
 
+## Running the Game
+
+From within the project's root directory, start the game with `$ ./minesweeper`.
