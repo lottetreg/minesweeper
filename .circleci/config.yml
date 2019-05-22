@@ -48,11 +48,51 @@ jobs:
           path: _build/test/lib/minesweeper
 
   deploy:
-    machine:
-      enabled: true
+    docker:
+      - image: circleci/elixir:1.8
     steps:
       - checkout
-      - run: echo "deploying master"
+
+      - run: mix local.hex --force
+
+      - restore_cache:
+          keys:
+            - v1-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
+            - v1-mix-cache-{{ .Branch }}
+            - v1-mix-cache
+      - restore_cache:
+          keys:
+            - v1-build-cache-{{ .Branch }}
+            - v1-build-cache
+
+      - run: mix do deps.get, compile
+
+      - save_cache:
+          key: v1-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
+          paths: "deps"
+      - save_cache:
+          key: v1-mix-cache-{{ .Branch }}
+          paths: "deps"
+      - save_cache:
+          key: v1-mix-cache
+          paths: "deps"
+      - save_cache:
+          key: v1-build-cache-{{ .Branch }}
+          paths: "_build"
+      - save_cache:
+          key: v1-build-cache
+          paths: "_build"
+
+      - run: echo "deploying circleci-deploy-workflow"
+
+      - run:
+          name: Get and Store Version
+          command: |
+            VERSION=`mix ex_app_info.version.get`
+            echo "export VERSION=$VERSION" >> $BASH_ENV
+            source $BASH_ENV
+
+      - run: echo "$BASH_ENV"
 
 workflows:
   version: 2

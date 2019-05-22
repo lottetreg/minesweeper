@@ -21,7 +21,8 @@ defmodule Minesweeper.MixProject do
   defp deps do
     [
       {:ex_doc, "~> 0.19", only: :dev, runtime: false},
-      {:junit_formatter, "~> 3.0", only: [:test]}
+      {:junit_formatter, "~> 3.0", only: [:test]},
+      {:ex_app_info, "~> 0.3.0"}
     ]
   end
 
