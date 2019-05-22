@@ -18,4 +18,4 @@ The docs can be found at [https://hexdocs.pm/minesweeper](https://hexdocs.pm/min
 
 ## Running the Game
 
-From within the project's root directory, start the game with `$ ./minesweeper`.
+From within the project's root directory, start the game with `$ ./minesweeper`. You will need to install Erlang/OTP if you haven't already.
