@@ -8,7 +8,8 @@ defmodule Minesweeper.MixProject do
       elixir: "~> 1.8",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      package: package()
+      package: package(),
+      escript: [main_module: Minesweeper]
     ]
   end
 
