@@ -1,4 +1,4 @@
-version: 2.1
+version: 2
 jobs:
   build:
     parallelism: 1
@@ -83,16 +83,30 @@ jobs:
           key: v1-build-cache
           paths: "_build"
 
-      - run: echo "deploying circleci-deploy-workflow"
+      - run: echo "deploying circleci-deploy-workflow" # change to master
 
       - run:
-          name: Get and Store Version
+          name: Get Minesweeper Version
           command: |
             VERSION=`mix ex_app_info.version.get`
             echo "export VERSION=$VERSION" >> $BASH_ENV
             source $BASH_ENV
+            echo "Minesweeper Version is v${VERSION}"
 
-      - run: echo "$BASH_ENV"
+      - add_ssh_keys:
+          fingerprints:
+            - "7f:2b:da:23:1b:e3:11:76:7c:83:b7:c5:eb:40:25:e4"
+
+      - run:
+          name: Create and Push Git Tag
+          command: |
+            git config --global user.email "${GIT_USER_EMAIL}"
+            git config --global user.name "${GIT_USER_NAME}"
+            git tag -a v${VERSION} -m "something"
+            git push origin v${VERSION}
+        # skip build when pushing new git tag?
+        # https://circleci.com/docs/2.0/skip-build/#skipping-a-build
+        # actually don't think I need to: https://circleci.com/docs/2.0/configuration-reference/#tags
 
 workflows:
   version: 2
@@ -104,4 +118,4 @@ workflows:
             - build
           filters:
             branches:
-              only: circleci-deploy-workflow
+              only: circleci-deploy-workflow # change to master
