@@ -2,14 +2,16 @@ defmodule GameTest do
   use ExUnit.Case
   doctest Game
 
-  test "prints a 10x10 board" do
-    defmodule MockOut do
-      def print(string) do
-        send(self(), {:print, string})
-      end
-    end
+  import Mox
 
-    Game.print_board(MockOut)
+  setup :verify_on_exit!
+
+  test "prints a 10x10 board" do
+    out =
+      MockOut
+      |> expect(:print, 11, fn string -> send(self(), {:print, string}) end)
+
+    Game.print_board(out)
 
     assert_received {:print, "   A B C D E F G H I J"}
     assert_received {:print, "0 | | | | | | | | | | |"}
