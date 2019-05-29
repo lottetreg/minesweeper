@@ -1,28 +1,75 @@
 defmodule GameTest do
   use ExUnit.Case
-  doctest Game
 
   import Mox
 
   setup :verify_on_exit!
 
-  test "prints a 10x10 board" do
+  test "prints a given board" do
     out =
-      MockOut
-      |> expect(:print, 11, fn string -> send(self(), {:print, string}) end)
+      MockWriter
+      |> expect(:write, fn string -> send(self(), {:write, string}) end)
 
-    Game.print_board(out)
+    Game.print_board(out, Board.new().board)
 
-    assert_received {:print, "   A B C D E F G H I J"}
-    assert_received {:print, "0 | | | | | | | | | | |"}
-    assert_received {:print, "1 | | | | | | | | | | |"}
-    assert_received {:print, "2 | | | | | | | | | | |"}
-    assert_received {:print, "3 | | | | | | | | | | |"}
-    assert_received {:print, "4 | | | | | | | | | | |"}
-    assert_received {:print, "5 | | | | | | | | | | |"}
-    assert_received {:print, "6 | | | | | | | | | | |"}
-    assert_received {:print, "7 | | | | | | | | | | |"}
-    assert_received {:print, "8 | | | | | | | | | | |"}
-    assert_received {:print, "9 | | | | | | | | | | |"}
+    assert_received {
+      :write,
+      [
+        "   A B C D E F G H I J\n",
+        [
+          "0 | | | | | | | | | | |\n",
+          "1 | | | | | | | | | | |\n",
+          "2 | | | | | | | | | | |\n",
+          "3 | | | | | | | | | | |\n",
+          "4 | | | | | | | | | | |\n",
+          "5 | | | | | | | | | | |\n",
+          "6 | | | | | | | | | | |\n",
+          "7 | | | | | | | | | | |\n",
+          "8 | | | | | | | | | | |\n",
+          "9 | | | | | | | | | | |\n"
+        ]
+      ]
+    }
+  end
+
+  test "returns a coordinate pair for the move 0A" do
+    reader =
+      MockReader
+      |> expect(:read, fn -> "0A" end)
+
+    move = Game.get_move(reader)
+
+    assert(move == {0, 0})
+  end
+
+  test "returns a coordinate pair for the move 1A" do
+    reader =
+      MockReader
+      |> expect(:read, fn -> "1A" end)
+
+    move = Game.get_move(reader)
+
+    assert(move == {1, 0})
+  end
+
+  test "returns a coordinate pair for the move 1B" do
+    reader =
+      MockReader
+      |> expect(:read, fn -> "1B" end)
+
+    move = Game.get_move(reader)
+
+    assert(move == {1, 1})
+  end
+
+  test "returns a new board with the given move selected" do
+    old_board = Board.new().board
+    move = {1, 1}
+
+    assert(old_board[1][1].selected == false)
+
+    new_board = Game.select_board_tile(old_board, move)
+
+    assert(new_board[1][1].selected == true)
   end
 end
