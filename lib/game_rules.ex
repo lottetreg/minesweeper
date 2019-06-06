@@ -1,7 +1,6 @@
 defmodule GameRules do
-  @behaviour GameRulesBehaviour
-
-  def over? do
-    false
+  def over?(board) do
+    Board.all_tiles(board)
+    |> Enum.any?(fn tile -> Tile.exploded?(tile) end)
   end
 end

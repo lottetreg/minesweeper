@@ -4,8 +4,16 @@ defmodule GameState do
   def new do
     %GameState{
       board: Board.new().board,
-      config: %{reader: Reader, writer: Writer},
-      status: :in_progress
+      config: default_config(),
+      status: :awaiting_first_move
+    }
+  end
+
+  defp default_config do
+    %{
+      reader: Reader,
+      writer: Writer,
+      randomizer: Randomizer
     }
   end
 

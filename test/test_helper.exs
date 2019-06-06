@@ -1,6 +1,6 @@
 Mox.defmock(MockWriter, for: WriterBehaviour)
 Mox.defmock(MockReader, for: ReaderBehaviour)
-Mox.defmock(MockGameRules, for: GameRulesBehaviour)
+Mox.defmock(MockRandomizer, for: RandomizerBehaviour)
 
 ExUnit.configure(formatters: [JUnitFormatter, ExUnit.CLIFormatter])
 ExUnit.start()
