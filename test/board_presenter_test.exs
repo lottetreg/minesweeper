@@ -26,7 +26,7 @@ defmodule BoardPresenterTest do
   end
 
   test "returns a list representation of the given non-empty board" do
-    board = Game.select_board_tile(Board.new().board, {2, 5})
+    board = Board.select_tile(Board.new().board, {2, 5})
 
     presented_board = BoardPresenter.present(board)
 

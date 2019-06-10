@@ -1,34 +1,33 @@
 defmodule Game do
-  def print_board(writer, board) do
+  def play(%GameState{status: :in_progress} = game_state, game_rules) do
+    print_board(game_state.config.writer, game_state.board)
+
+    move = get_move(game_state.config.reader)
+    board = Board.select_tile(game_state.board, move)
+
+    game_state
+    |> GameState.set_board(board)
+    |> update_game_state_status(game_rules)
+    |> play(game_rules)
+  end
+
+  def play(%GameState{status: :over} = game_state, _) do
+    print_board(game_state.config.writer, game_state.board)
+  end
+
+  defp update_game_state_status(game_state, game_rules) do
+    if game_rules.over? do
+      GameState.set_status(game_state, :over)
+    else
+      game_state
+    end
+  end
+
+  defp print_board(writer, board) do
     writer.write(BoardPresenter.present(board))
   end
 
-  def get_move(reader) do
-    reader.read
-    |> find_letters_and_numbers
-    |> build_coordinate_pair
-  end
-
-  def select_board_tile(board, {x, y}) do
-    put_in(board[x][y].selected, true)
-  end
-
-  defp find_letters_and_numbers(string) do
-    Regex.scan(~r/\d+|[a-zA-Z]/, string, capture: :all)
-  end
-
-  defp build_coordinate_pair([[number], [letter]]) do
-    {String.to_integer(number), alphabetical_position(letter)}
-  end
-
-  defp alphabetical_position(letter) do
-    String.capitalize(letter)
-    |> String.to_charlist()
-    |> hd
-    |> distance_from_letter_A
-  end
-
-  defp distance_from_letter_A(codepoint) do
-    codepoint - ?A
+  defp get_move(reader) do
+    Move.translate(reader.read)
   end
 end
