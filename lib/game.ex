@@ -7,6 +7,7 @@ defmodule Game do
     board =
       Board.select_tile(game_state.board, move)
       |> BombPlacer.place_bombs(game_state.config.randomizer)
+      |> AdjacentBombCount.update_adjacent_bomb_counts()
 
     game_state
     |> GameState.set_board(board)

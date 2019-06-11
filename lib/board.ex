@@ -1,19 +1,19 @@
 defmodule Board do
   defstruct [:board]
 
-  @row_count 10
-  @col_count 10
-
-  def new do
-    %Board{board: empty_board()}
+  def new(row_count \\ 10, col_count \\ 10) do
+    %Board{
+      board: empty_board(row_count, col_count)
+    }
   end
 
-  def row_count do
-    @row_count
+  def row_count(board) do
+    length(board)
   end
 
-  def col_count do
-    @col_count
+  def col_count(board) do
+    first_row = Enum.at(board, 0)
+    length(first_row)
   end
 
   def all_tiles(board) do
@@ -37,12 +37,20 @@ defmodule Board do
     end)
   end
 
-  defp empty_board do
-    List.duplicate(empty_row(), @row_count)
+  def update_all_tiles(board, func) do
+    Enum.reduce(Enum.with_index(board), board, fn {row, row_index}, board ->
+      Enum.reduce(Enum.with_index(row), board, fn {tile, col_index}, board ->
+        func.(board, tile, {row_index, col_index})
+      end)
+    end)
   end
 
-  defp empty_row do
-    List.duplicate(empty_tile(), @col_count)
+  defp empty_board(row_count, col_count) do
+    List.duplicate(empty_row(col_count), row_count)
+  end
+
+  defp empty_row(col_count) do
+    List.duplicate(empty_tile(), col_count)
   end
 
   defp empty_tile do

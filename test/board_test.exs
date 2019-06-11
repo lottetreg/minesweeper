@@ -41,7 +41,7 @@ defmodule BoardTest do
     assert(tile == board |> Enum.at(0) |> Enum.at(0))
   end
 
-  test "replaces a tile at a given location" do
+  test "returns a new board with a replaced tile at a given location" do
     old_board = Board.new().board
 
     assert(Board.get_tile(old_board, {1, 1}) |> Tile.is_a?(EmptyTile))
@@ -59,5 +59,27 @@ defmodule BoardTest do
     new_board = Board.select_tile(old_board, {1, 1})
 
     assert(Board.get_tile(new_board, {1, 1}).state == :selected)
+  end
+
+  test "takes a function that returns a new board and calls it for every tile in the board" do
+    old_board = Board.new().board
+
+    all_tiles_are_unselected? =
+      Board.all_tiles(old_board)
+      |> Enum.all?(fn tile -> tile.state == :unselected end)
+
+    assert(all_tiles_are_unselected? == true)
+
+    new_board = Board.update_all_tiles(old_board, &select_tile/3)
+
+    all_tiles_are_selected? =
+      Board.all_tiles(new_board)
+      |> Enum.all?(fn tile -> tile.state == :selected end)
+
+    assert(all_tiles_are_selected? == true)
+  end
+
+  defp select_tile(board, tile, tile_location) do
+    Board.replace_tile(board, tile_location, Tile.select(tile))
   end
 end

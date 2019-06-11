@@ -10,8 +10,8 @@ defmodule BoardPresenter do
     ["   A B C D E F G H I J\n", rows_with_numbers]
   end
 
-  defp present_tile(%EmptyTile{state: :selected}, acc) do
-    acc <> "X|"
+  defp present_tile(%EmptyTile{state: :selected} = tile, acc) do
+    acc <> Integer.to_string(tile.adjacent_bomb_count) <> "|"
   end
 
   defp present_tile(%EmptyTile{state: :unselected}, acc) do

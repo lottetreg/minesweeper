@@ -1,7 +1,7 @@
 defmodule BoardPresenterTest do
   use ExUnit.Case
 
-  test "returns a list representation of the given empty board" do
+  test "returns a list representation of the given blank board" do
     board = Board.new().board
 
     presented_board = BoardPresenter.present(board)
@@ -25,7 +25,7 @@ defmodule BoardPresenterTest do
     assert(presented_board == expected_presented_board)
   end
 
-  test "returns a list representation of the given non-empty board" do
+  test "returns a list representation of the given board with selected tiles" do
     board = Board.select_tile(Board.new().board, {2, 5})
 
     presented_board = BoardPresenter.present(board)
@@ -35,7 +35,7 @@ defmodule BoardPresenterTest do
       [
         "0 | | | | | | | | | | |\n",
         "1 | | | | | | | | | | |\n",
-        "2 | | | | | |X| | | | |\n",
+        "2 | | | | | |0| | | | |\n",
         "3 | | | | | | | | | | |\n",
         "4 | | | | | | | | | | |\n",
         "5 | | | | | | | | | | |\n",
