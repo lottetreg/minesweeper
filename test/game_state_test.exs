@@ -6,10 +6,16 @@ defmodule GameStateTest do
   end
 
   test "is initialized with a default config" do
-    assert(GameState.new().config == %{reader: Reader, writer: Writer})
+    expected_default_config = %{
+      reader: Reader,
+      writer: Writer,
+      randomizer: Randomizer
+    }
+
+    assert(GameState.new().config == expected_default_config)
   end
 
   test "is initialized with a default status" do
-    assert(GameState.new().status == :in_progress)
+    assert(GameState.new().status == :awaiting_first_move)
   end
 end
