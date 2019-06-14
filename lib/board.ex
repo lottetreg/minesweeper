@@ -27,8 +27,15 @@ defmodule Board do
   end
 
   def select_tile(board, coordinate_pair) do
-    selected_tile = get_tile(board, coordinate_pair) |> Tile.select()
-    replace_tile(board, coordinate_pair, selected_tile)
+    tile = get_tile(board, coordinate_pair)
+
+    if Tile.is_selected?(tile) do
+      {:error, :already_selected}
+    else
+      selected_tile = Tile.select(tile)
+      result = replace_tile(board, coordinate_pair, selected_tile)
+      {:ok, result}
+    end
   end
 
   def replace_tile(board, {row_index, col_index}, value) do
@@ -54,6 +61,6 @@ defmodule Board do
   end
 
   defp empty_tile do
-    EmptyTile.new()
+    Tile.new(:empty)
   end
 end

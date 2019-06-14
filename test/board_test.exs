@@ -22,7 +22,7 @@ defmodule BoardTest do
   test "each tile on a new board is an empty tile" do
     Enum.each(Board.new().board, fn row ->
       Enum.each(row, fn tile ->
-        assert(Tile.is_a?(tile, EmptyTile))
+        assert(Tile.is_empty?(tile))
       end)
     end)
   end
@@ -44,11 +44,11 @@ defmodule BoardTest do
   test "returns a new board with a replaced tile at a given location" do
     old_board = Board.new().board
 
-    assert(Board.get_tile(old_board, {1, 1}) |> Tile.is_a?(EmptyTile))
+    assert(Board.get_tile(old_board, {1, 1}) |> Tile.is_empty?())
 
-    new_board = Board.replace_tile(old_board, {1, 1}, BombTile.new())
+    new_board = Board.replace_tile(old_board, {1, 1}, Tile.new(:bomb))
 
-    assert(Board.get_tile(new_board, {1, 1}) |> Tile.is_a?(BombTile))
+    assert(Board.get_tile(new_board, {1, 1}) |> Tile.is_bomb?())
   end
 
   test "returns a new board with the tile selected at the given location" do
@@ -56,7 +56,7 @@ defmodule BoardTest do
 
     assert(Board.get_tile(old_board, {1, 1}).state == :unselected)
 
-    new_board = Board.select_tile(old_board, {1, 1})
+    {:ok, new_board} = Board.select_tile(old_board, {1, 1})
 
     assert(Board.get_tile(new_board, {1, 1}).state == :selected)
   end

@@ -12,7 +12,7 @@ defmodule GameRulesTest do
 
     tile_in_first_row = {0, 0}
 
-    board_with_bomb_selected =
+    {:ok, board_with_bomb_selected} =
       Board.new().board
       |> BombPlacer.place_bombs(randomizer)
       |> Board.select_tile(tile_in_first_row)
@@ -35,8 +35,9 @@ defmodule GameRulesTest do
   end
 
   defp select_if_empty(board, tile, tile_location) do
-    if Tile.is_a?(tile, EmptyTile) do
-      Board.select_tile(board, tile_location)
+    if Tile.is_empty?(tile) do
+      {:ok, board} = Board.select_tile(board, tile_location)
+      board
     else
       board
     end

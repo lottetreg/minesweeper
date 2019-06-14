@@ -13,7 +13,7 @@ defmodule AdjacentBombCount do
   defp adjacent_bomb_count(board, tile_location) do
     adjacent_tiles(board, tile_location)
     |> Enum.count(fn tile ->
-      Tile.is_a?(tile, BombTile)
+      Tile.is_bomb?(tile)
     end)
   end
 

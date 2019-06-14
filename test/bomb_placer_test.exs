@@ -12,7 +12,7 @@ defmodule BombPlacerTest do
 
     number_of_bombs =
       Board.all_tiles(board)
-      |> Enum.count(fn tile -> Tile.is_a?(tile, BombTile) end)
+      |> Enum.count(fn tile -> Tile.is_bomb?(tile) end)
 
     assert(number_of_bombs == 10)
   end
@@ -40,14 +40,14 @@ defmodule BombPlacerTest do
       |> BombPlacer.place_bombs(randomizer)
 
     Enum.each(bomb_locations, fn bomb_location ->
-      assert(Board.get_tile(board_with_bombs, bomb_location) |> Tile.is_a?(BombTile))
+      assert(Board.get_tile(board_with_bombs, bomb_location) |> Tile.is_bomb?())
     end)
   end
 
   test "does not place bombs on selected tiles" do
     selected_tile_location = {4, 4}
 
-    board =
+    {:ok, board} =
       Board.new().board
       |> Board.select_tile(selected_tile_location)
 
@@ -60,6 +60,6 @@ defmodule BombPlacerTest do
 
     selected_tile = Board.get_tile(board, selected_tile_location)
 
-    assert(Tile.is_a?(selected_tile, EmptyTile))
+    assert(Tile.is_empty?(selected_tile))
   end
 end
