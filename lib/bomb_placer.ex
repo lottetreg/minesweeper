@@ -10,8 +10,8 @@ defmodule BombPlacer do
   def place_bombs(board, randomizer, _current_bomb_count) do
     coordinates =
       randomizer.random_coordinate_pair(
-        Board.row_count(),
-        Board.col_count()
+        Board.row_count(board),
+        Board.col_count(board)
       )
 
     board =

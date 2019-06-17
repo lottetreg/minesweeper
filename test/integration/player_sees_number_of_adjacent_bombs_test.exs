@@ -1,22 +1,22 @@
-defmodule PlayerLosesWhenTheyLandOnABombTest do
+defmodule PlayerSeesNumberOfAdjacentBombsTest do
   use ExUnit.Case
 
   import Mox
 
   setup :verify_on_exit!
 
-  test "the player loses when they land on a bomb" do
+  test "the player sees the number of adjacent bombs in a selected empty tile" do
     randomizer =
       MockRandomizer
       |> allow_random_coordinate_pair_to_return_first_row()
 
-    tile_not_in_first_row = "4E"
-    tile_in_first_row = "0A"
+    location_of_empty_tile_with_two_adjacent_bombs = "1A"
+    location_of_bomb_tile = "0A"
 
     reader =
       MockReader
-      |> expect(:read, fn -> tile_not_in_first_row end)
-      |> expect(:read, fn -> tile_in_first_row end)
+      |> expect(:read, fn -> location_of_empty_tile_with_two_adjacent_bombs end)
+      |> expect(:read, fn -> location_of_bomb_tile end)
 
     writer =
       MockWriter
@@ -57,10 +57,10 @@ defmodule PlayerLosesWhenTheyLandOnABombTest do
         "   A B C D E F G H I J\n",
         [
           "0 | | | | | | | | | | |\n",
-          "1 | | | | | | | | | | |\n",
+          "1 |2| | | | | | | | | |\n",
           "2 | | | | | | | | | | |\n",
           "3 | | | | | | | | | | |\n",
-          "4 | | | | |0| | | | | |\n",
+          "4 | | | | | | | | | | |\n",
           "5 | | | | | | | | | | |\n",
           "6 | | | | | | | | | | |\n",
           "7 | | | | | | | | | | |\n",
@@ -76,10 +76,10 @@ defmodule PlayerLosesWhenTheyLandOnABombTest do
         "   A B C D E F G H I J\n",
         [
           "0 |*| | | | | | | | | |\n",
-          "1 | | | | | | | | | | |\n",
+          "1 |2| | | | | | | | | |\n",
           "2 | | | | | | | | | | |\n",
           "3 | | | | | | | | | | |\n",
-          "4 | | | | |0| | | | | |\n",
+          "4 | | | | | | | | | | |\n",
           "5 | | | | | | | | | | |\n",
           "6 | | | | | | | | | | |\n",
           "7 | | | | | | | | | | |\n",

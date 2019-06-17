@@ -25,21 +25,20 @@ defmodule GameRulesTest do
       Board.new().board
       |> BombPlacer.place_bombs(Randomizer)
 
-    board_with_empty_tiles_selected =
-      Enum.reduce(Enum.with_index(board), board, fn {row, row_index}, board ->
-        Enum.reduce(Enum.with_index(row), board, fn {tile, col_index}, board ->
-          if Tile.is_a?(tile, EmptyTile) do
-            Board.select_tile(board, {row_index, col_index})
-          else
-            board
-          end
-        end)
-      end)
+    board_with_empty_tiles_selected = Board.update_all_tiles(board, &select_if_empty/3)
 
     assert(GameRules.player_won?(board_with_empty_tiles_selected) == true)
   end
 
   defp allow_random_coordinate_pair_to_return_first_row(mock_randomizer) do
     MockRandomizerHelper.allow_random_coordinate_pair_to_return(mock_randomizer)
+  end
+
+  defp select_if_empty(board, tile, tile_location) do
+    if Tile.is_a?(tile, EmptyTile) do
+      Board.select_tile(board, tile_location)
+    else
+      board
+    end
   end
 end
