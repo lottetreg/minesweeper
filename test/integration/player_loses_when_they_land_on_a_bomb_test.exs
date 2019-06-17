@@ -1,30 +1,22 @@
-defmodule GameTest do
+defmodule PlayerLosesWhenTheyLandOnABombTest do
   use ExUnit.Case
 
   import Mox
 
   setup :verify_on_exit!
 
-  test "plays the game until it is over" do
+  test "the player loses when they land on a bomb" do
     randomizer =
       MockRandomizer
-      |> expect(:random_coordinate_pair, fn _, _ -> {0, 0} end)
-      |> expect(:random_coordinate_pair, fn _, _ -> {1, 0} end)
-      |> expect(:random_coordinate_pair, fn _, _ -> {2, 0} end)
-      |> expect(:random_coordinate_pair, fn _, _ -> {3, 0} end)
-      |> expect(:random_coordinate_pair, fn _, _ -> {4, 0} end)
-      |> expect(:random_coordinate_pair, fn _, _ -> {5, 0} end)
-      |> expect(:random_coordinate_pair, fn _, _ -> {6, 0} end)
-      |> expect(:random_coordinate_pair, fn _, _ -> {7, 0} end)
-      |> expect(:random_coordinate_pair, fn _, _ -> {8, 0} end)
-      |> expect(:random_coordinate_pair, fn _, _ -> {9, 0} end)
+      |> allow_random_coordinate_pair_to_return_first_row()
 
-    bomb_location = "0A"
+    tile_not_in_first_row = "4E"
+    tile_in_first_row = "0A"
 
     reader =
       MockReader
-      |> expect(:read, fn -> "4E" end)
-      |> expect(:read, fn -> bomb_location end)
+      |> expect(:read, fn -> tile_not_in_first_row end)
+      |> expect(:read, fn -> tile_in_first_row end)
 
     writer =
       MockWriter
@@ -98,5 +90,9 @@ defmodule GameTest do
     }
 
     assert_received {:write, "You lose!\n"}
+  end
+
+  defp allow_random_coordinate_pair_to_return_first_row(mock_randomizer) do
+    MockRandomizerHelper.allow_random_coordinate_pair_to_return(mock_randomizer)
   end
 end

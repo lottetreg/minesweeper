@@ -20,22 +20,20 @@ defmodule BombPlacerTest do
   test "places 10 bombs according to results of the Randomizer" do
     bomb_locations = [
       {0, 0},
-      {1, 0},
-      {2, 0},
-      {3, 0},
-      {4, 0},
-      {5, 0},
-      {6, 0},
-      {7, 0},
-      {8, 0},
-      {9, 0}
+      {1, 1},
+      {2, 2},
+      {3, 3},
+      {4, 4},
+      {5, 5},
+      {6, 6},
+      {7, 7},
+      {8, 8},
+      {9, 9}
     ]
 
-    randomizer = MockRandomizer
-
-    Enum.each(bomb_locations, fn bomb_location ->
-      expect(randomizer, :random_coordinate_pair, fn _, _ -> bomb_location end)
-    end)
+    randomizer =
+      MockRandomizer
+      |> MockRandomizerHelper.allow_random_coordinate_pair_to_return(bomb_locations)
 
     board_with_bombs =
       Board.new().board
@@ -55,21 +53,12 @@ defmodule BombPlacerTest do
 
     randomizer =
       MockRandomizer
-      |> expect(:random_coordinate_pair, fn _, _ -> selected_tile_location end)
-      |> expect(:random_coordinate_pair, fn _, _ -> {0, 0} end)
-      |> expect(:random_coordinate_pair, fn _, _ -> {1, 0} end)
-      |> expect(:random_coordinate_pair, fn _, _ -> {2, 0} end)
-      |> expect(:random_coordinate_pair, fn _, _ -> {3, 0} end)
-      |> expect(:random_coordinate_pair, fn _, _ -> {4, 0} end)
-      |> expect(:random_coordinate_pair, fn _, _ -> {5, 0} end)
-      |> expect(:random_coordinate_pair, fn _, _ -> {6, 0} end)
-      |> expect(:random_coordinate_pair, fn _, _ -> {7, 0} end)
-      |> expect(:random_coordinate_pair, fn _, _ -> {8, 0} end)
-      |> expect(:random_coordinate_pair, fn _, _ -> {9, 0} end)
+      |> MockRandomizerHelper.allow_random_coordinate_pair_to_return(selected_tile_location)
+      |> MockRandomizerHelper.allow_random_coordinate_pair_to_return()
 
-    selected_tile =
-      BombPlacer.place_bombs(board, randomizer)
-      |> Board.get_tile(selected_tile_location)
+    board = BombPlacer.place_bombs(board, randomizer)
+
+    selected_tile = Board.get_tile(board, selected_tile_location)
 
     assert(Tile.is_a?(selected_tile, EmptyTile))
   end

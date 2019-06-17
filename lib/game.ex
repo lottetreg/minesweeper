@@ -27,16 +27,26 @@ defmodule Game do
     |> play()
   end
 
-  def play(%GameState{status: :over} = game_state) do
+  def play(%GameState{status: :player_lost} = game_state) do
     print_board(game_state.config.writer, game_state.board)
     game_state.config.writer.write("You lose!\n")
   end
 
+  def play(%GameState{status: :player_won} = game_state) do
+    print_board(game_state.config.writer, game_state.board)
+    game_state.config.writer.write("You win!\n")
+  end
+
   defp update_game_state_status(game_state) do
-    if GameRules.over?(game_state.board) do
-      GameState.set_status(game_state, :over)
-    else
-      game_state
+    cond do
+      GameRules.player_lost?(game_state.board) ->
+        GameState.set_status(game_state, :player_lost)
+
+      GameRules.player_won?(game_state.board) ->
+        GameState.set_status(game_state, :player_won)
+
+      true ->
+        game_state
     end
   end
 
