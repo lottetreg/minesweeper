@@ -2,13 +2,27 @@ defmodule PlayerIsToldToTryAgainIfTheyReenterAMoveTest do
   use ExUnit.Case
 
   import Mox
+  import MockRandomizerHelper
 
   setup :verify_on_exit!
 
   test "the player is told to try again if they reenter a move" do
+    first_row_coordinate_pairs = [
+      {0, 0},
+      {0, 1},
+      {0, 2},
+      {0, 3},
+      {0, 4},
+      {0, 5},
+      {0, 6},
+      {0, 7},
+      {0, 8},
+      {0, 9}
+    ]
+
     randomizer =
       MockRandomizer
-      |> MockRandomizerHelper.allow_random_coordinate_pair_to_return()
+      |> allow_random_coordinate_pair_to_return(first_row_coordinate_pairs)
 
     empty_tile_location = "4E"
     bomb_tile_location = "0A"

@@ -6,32 +6,40 @@ defmodule GameRulesTest do
   setup :verify_on_exit!
 
   test "the player has lost if a bomb has been selected" do
-    randomizer =
-      MockRandomizer
-      |> allow_random_coordinate_pair_to_return_first_row()
-
-    tile_in_first_row = {0, 0}
+    first_tile = {0, 0}
 
     {:ok, board_with_bomb_selected} =
       Board.new().board
-      |> BombPlacer.place_bombs(randomizer)
-      |> Board.select_tile(tile_in_first_row)
+      |> Board.replace_tile(first_tile, Tile.new(:bomb))
+      |> Board.select_tile(first_tile)
 
     assert(GameRules.player_lost?(board_with_bomb_selected) == true)
+  end
+
+  test "the player has not lost if only empty tiles have been selected" do
+    first_tile = {0, 0}
+    second_tile = {0, 1}
+
+    {:ok, board_with_empty_selected} =
+      Board.new().board
+      |> Board.replace_tile(first_tile, Tile.new(:bomb))
+      |> Board.select_tile(second_tile)
+
+    assert(GameRules.player_lost?(board_with_empty_selected) == false)
   end
 
   test "the player has won if all the empty tiles have been selected" do
     board =
       Board.new().board
-      |> BombPlacer.place_bombs(Randomizer)
+      |> place_a_bomb
 
     board_with_empty_tiles_selected = Board.update_all_tiles(board, &select_if_empty/3)
 
     assert(GameRules.player_won?(board_with_empty_tiles_selected) == true)
   end
 
-  defp allow_random_coordinate_pair_to_return_first_row(mock_randomizer) do
-    MockRandomizerHelper.allow_random_coordinate_pair_to_return(mock_randomizer)
+  defp place_a_bomb(board) do
+    Board.replace_tile(board, {0, 0}, Tile.new(:bomb))
   end
 
   defp select_if_empty(board, tile, tile_location) do

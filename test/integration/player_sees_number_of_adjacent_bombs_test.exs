@@ -2,13 +2,27 @@ defmodule PlayerSeesNumberOfAdjacentBombsTest do
   use ExUnit.Case
 
   import Mox
+  import MockRandomizerHelper
 
   setup :verify_on_exit!
 
   test "the player sees the number of adjacent bombs in a selected empty tile" do
+    first_row_coordinate_pairs = [
+      {0, 0},
+      {0, 1},
+      {0, 2},
+      {0, 3},
+      {0, 4},
+      {0, 5},
+      {0, 6},
+      {0, 7},
+      {0, 8},
+      {0, 9}
+    ]
+
     randomizer =
       MockRandomizer
-      |> allow_random_coordinate_pair_to_return_first_row()
+      |> allow_random_coordinate_pair_to_return(first_row_coordinate_pairs)
 
     location_of_empty_tile_with_two_adjacent_bombs = "1A"
     location_of_bomb_tile = "0A"
@@ -90,9 +104,5 @@ defmodule PlayerSeesNumberOfAdjacentBombsTest do
     }
 
     assert_received {:write, "You lose!\n"}
-  end
-
-  defp allow_random_coordinate_pair_to_return_first_row(mock_randomizer) do
-    MockRandomizerHelper.allow_random_coordinate_pair_to_return(mock_randomizer)
   end
 end

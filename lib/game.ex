@@ -9,7 +9,7 @@ defmodule Game do
     board_with_bombs_and_counts =
       board
       |> BombPlacer.place_bombs(game_state.config.randomizer)
-      |> AdjacentBombCount.update_adjacent_bomb_counts()
+      |> AdjacentBombCount.set_adjacent_bomb_counts()
 
     game_state
     |> GameState.set_board(board_with_bombs_and_counts)

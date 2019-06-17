@@ -4,7 +4,7 @@ defmodule AdjacentBombCountTest do
   test "a 3x3 board with no bombs" do
     board = Board.new(3, 3).board
 
-    board_with_updated_bomb_counts = AdjacentBombCount.update_adjacent_bomb_counts(board)
+    board_with_updated_bomb_counts = AdjacentBombCount.set_adjacent_bomb_counts(board)
 
     expected_board = [
       [
@@ -34,7 +34,7 @@ defmodule AdjacentBombCountTest do
       Board.new(3, 3).board
       |> Board.replace_tile(first_tile, Tile.new(:bomb))
 
-    board_with_bomb_counts = AdjacentBombCount.update_adjacent_bomb_counts(board)
+    board_with_bomb_counts = AdjacentBombCount.set_adjacent_bomb_counts(board)
 
     expected_board = [
       [
@@ -64,7 +64,7 @@ defmodule AdjacentBombCountTest do
       Board.new(3, 3).board
       |> Board.replace_tile(second_tile, Tile.new(:bomb))
 
-    board_with_bomb_counts = AdjacentBombCount.update_adjacent_bomb_counts(board)
+    board_with_bomb_counts = AdjacentBombCount.set_adjacent_bomb_counts(board)
 
     expected_board = [
       [
@@ -94,7 +94,7 @@ defmodule AdjacentBombCountTest do
       Board.new(3, 3).board
       |> Board.replace_tile(third_tile, Tile.new(:bomb))
 
-    board_with_bomb_counts = AdjacentBombCount.update_adjacent_bomb_counts(board)
+    board_with_bomb_counts = AdjacentBombCount.set_adjacent_bomb_counts(board)
 
     expected_board = [
       [
@@ -124,7 +124,7 @@ defmodule AdjacentBombCountTest do
       Board.new(3, 3).board
       |> Board.replace_tile(fourth_tile, Tile.new(:bomb))
 
-    board_with_bomb_counts = AdjacentBombCount.update_adjacent_bomb_counts(board)
+    board_with_bomb_counts = AdjacentBombCount.set_adjacent_bomb_counts(board)
 
     expected_board = [
       [
@@ -154,7 +154,7 @@ defmodule AdjacentBombCountTest do
       Board.new(3, 3).board
       |> Board.replace_tile(fifth_tile, Tile.new(:bomb))
 
-    board_with_bomb_counts = AdjacentBombCount.update_adjacent_bomb_counts(board)
+    board_with_bomb_counts = AdjacentBombCount.set_adjacent_bomb_counts(board)
 
     expected_board = [
       [
@@ -184,7 +184,7 @@ defmodule AdjacentBombCountTest do
       Board.new(3, 3).board
       |> Board.replace_tile(sixth_tile, Tile.new(:bomb))
 
-    board_with_bomb_counts = AdjacentBombCount.update_adjacent_bomb_counts(board)
+    board_with_bomb_counts = AdjacentBombCount.set_adjacent_bomb_counts(board)
 
     expected_board = [
       [
@@ -214,7 +214,7 @@ defmodule AdjacentBombCountTest do
       Board.new(3, 3).board
       |> Board.replace_tile(seventh_tile, Tile.new(:bomb))
 
-    board_with_bomb_counts = AdjacentBombCount.update_adjacent_bomb_counts(board)
+    board_with_bomb_counts = AdjacentBombCount.set_adjacent_bomb_counts(board)
 
     expected_board = [
       [
@@ -244,7 +244,7 @@ defmodule AdjacentBombCountTest do
       Board.new(3, 3).board
       |> Board.replace_tile(eighth_tile, Tile.new(:bomb))
 
-    board_with_bomb_counts = AdjacentBombCount.update_adjacent_bomb_counts(board)
+    board_with_bomb_counts = AdjacentBombCount.set_adjacent_bomb_counts(board)
 
     expected_board = [
       [
@@ -274,7 +274,7 @@ defmodule AdjacentBombCountTest do
       Board.new(3, 3).board
       |> Board.replace_tile(nineth_tile, Tile.new(:bomb))
 
-    board_with_bomb_counts = AdjacentBombCount.update_adjacent_bomb_counts(board)
+    board_with_bomb_counts = AdjacentBombCount.set_adjacent_bomb_counts(board)
 
     expected_board = [
       [
@@ -306,7 +306,7 @@ defmodule AdjacentBombCountTest do
       |> Board.replace_tile(first_tile, Tile.new(:bomb))
       |> Board.replace_tile(second_tile, Tile.new(:bomb))
 
-    board_with_bomb_counts = AdjacentBombCount.update_adjacent_bomb_counts(board)
+    board_with_bomb_counts = AdjacentBombCount.set_adjacent_bomb_counts(board)
 
     expected_board = [
       [
@@ -338,7 +338,7 @@ defmodule AdjacentBombCountTest do
       |> Board.replace_tile(first_tile, Tile.new(:bomb))
       |> Board.replace_tile(nineth_tile, Tile.new(:bomb))
 
-    board_with_bomb_counts = AdjacentBombCount.update_adjacent_bomb_counts(board)
+    board_with_bomb_counts = AdjacentBombCount.set_adjacent_bomb_counts(board)
 
     expected_board = [
       [

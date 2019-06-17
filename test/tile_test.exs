@@ -36,7 +36,7 @@ defmodule TileTest do
   test "updates the adjacent_bomb_count" do
     tile = new_tile()
 
-    updated_tile = Tile.update_adjacent_bomb_count(tile, 1)
+    updated_tile = Tile.set_adjacent_bomb_count(tile, 1)
 
     assert(updated_tile.adjacent_bomb_count == 1)
   end
