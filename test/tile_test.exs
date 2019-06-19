@@ -15,9 +15,9 @@ defmodule TileTest do
     assert(Tile.new(:bomb).type == :bomb)
   end
 
-  test "is initialized with a state of :unselected" do
-    assert(Tile.new(:empty).state == :unselected)
-    assert(Tile.new(:bomb).state == :unselected)
+  test "is initialized with a state of :hidden" do
+    assert(Tile.new(:empty).state == :hidden)
+    assert(Tile.new(:bomb).state == :hidden)
   end
 
   test "is initialized with an adjacent_bomb_count of 0" do
@@ -25,12 +25,12 @@ defmodule TileTest do
     assert(Tile.new(:bomb).adjacent_bomb_count == 0)
   end
 
-  test "changes the state to selected" do
+  test "changes the state to revealed" do
     tile = new_tile()
 
-    selected_tile = Tile.select(tile)
+    revealed_tile = Tile.reveal(tile)
 
-    assert(selected_tile.state == :selected)
+    assert(revealed_tile.state == :revealed)
   end
 
   test "updates the adjacent_bomb_count" do
@@ -44,9 +44,9 @@ defmodule TileTest do
   test "it is exploded if it is a bomb and has been selected" do
     bomb_tile = Tile.new(:bomb)
 
-    selected_bomb_tile = Tile.select(bomb_tile)
+    revealed_bomb_tile = Tile.reveal(bomb_tile)
 
-    assert(Tile.exploded?(selected_bomb_tile) == true)
+    assert(Tile.exploded?(revealed_bomb_tile) == true)
   end
 
   test "it is not exploded if it is a bomb and has not been selected" do

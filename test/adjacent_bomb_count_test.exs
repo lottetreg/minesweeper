@@ -4,27 +4,13 @@ defmodule AdjacentBombCountTest do
   test "a 3x3 board with no bombs" do
     board = Board.new(3, 3).board
 
-    board_with_updated_bomb_counts = AdjacentBombCount.set_adjacent_bomb_counts(board)
+    board_with_bomb_counts = AdjacentBombCount.set_adjacent_bomb_counts(board)
 
-    expected_board = [
-      [
-        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected}
-      ],
-      [
-        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected}
-      ],
-      [
-        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected}
-      ]
-    ]
-
-    assert(board_with_updated_bomb_counts == expected_board)
+    assert format(board_with_bomb_counts) == [
+             [0, 0, 0],
+             [0, 0, 0],
+             [0, 0, 0]
+           ]
   end
 
   test "a 3x3 board with one bomb in the first tile" do
@@ -36,25 +22,11 @@ defmodule AdjacentBombCountTest do
 
     board_with_bomb_counts = AdjacentBombCount.set_adjacent_bomb_counts(board)
 
-    expected_board = [
-      [
-        %Tile{type: :bomb, adjacent_bomb_count: 0, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected}
-      ],
-      [
-        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected}
-      ],
-      [
-        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected}
-      ]
-    ]
-
-    assert(board_with_bomb_counts == expected_board)
+    assert format(board_with_bomb_counts) == [
+             [0, 1, 0],
+             [1, 1, 0],
+             [0, 0, 0]
+           ]
   end
 
   test "a 3x3 board with one bomb in the second tile" do
@@ -66,25 +38,11 @@ defmodule AdjacentBombCountTest do
 
     board_with_bomb_counts = AdjacentBombCount.set_adjacent_bomb_counts(board)
 
-    expected_board = [
-      [
-        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
-        %Tile{type: :bomb, adjacent_bomb_count: 0, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected}
-      ],
-      [
-        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected}
-      ],
-      [
-        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected}
-      ]
-    ]
-
-    assert(board_with_bomb_counts == expected_board)
+    assert format(board_with_bomb_counts) == [
+             [1, 0, 1],
+             [1, 1, 1],
+             [0, 0, 0]
+           ]
   end
 
   test "a 3x3 board with one bomb in the third tile" do
@@ -96,25 +54,11 @@ defmodule AdjacentBombCountTest do
 
     board_with_bomb_counts = AdjacentBombCount.set_adjacent_bomb_counts(board)
 
-    expected_board = [
-      [
-        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
-        %Tile{type: :bomb, adjacent_bomb_count: 0, state: :unselected}
-      ],
-      [
-        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected}
-      ],
-      [
-        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected}
-      ]
-    ]
-
-    assert(board_with_bomb_counts == expected_board)
+    assert format(board_with_bomb_counts) == [
+             [0, 1, 0],
+             [0, 1, 1],
+             [0, 0, 0]
+           ]
   end
 
   test "a 3x3 board with one bomb in the fourth tile" do
@@ -126,25 +70,11 @@ defmodule AdjacentBombCountTest do
 
     board_with_bomb_counts = AdjacentBombCount.set_adjacent_bomb_counts(board)
 
-    expected_board = [
-      [
-        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected}
-      ],
-      [
-        %Tile{type: :bomb, adjacent_bomb_count: 0, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected}
-      ],
-      [
-        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected}
-      ]
-    ]
-
-    assert(board_with_bomb_counts == expected_board)
+    assert format(board_with_bomb_counts) == [
+             [1, 1, 0],
+             [0, 1, 0],
+             [1, 1, 0]
+           ]
   end
 
   test "a 3x3 board with one bomb in the fifth tile" do
@@ -156,25 +86,11 @@ defmodule AdjacentBombCountTest do
 
     board_with_bomb_counts = AdjacentBombCount.set_adjacent_bomb_counts(board)
 
-    expected_board = [
-      [
-        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected}
-      ],
-      [
-        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
-        %Tile{type: :bomb, adjacent_bomb_count: 0, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected}
-      ],
-      [
-        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected}
-      ]
-    ]
-
-    assert(board_with_bomb_counts == expected_board)
+    assert format(board_with_bomb_counts) == [
+             [1, 1, 1],
+             [1, 0, 1],
+             [1, 1, 1]
+           ]
   end
 
   test "a 3x3 board with one bomb in the sixth tile" do
@@ -186,25 +102,11 @@ defmodule AdjacentBombCountTest do
 
     board_with_bomb_counts = AdjacentBombCount.set_adjacent_bomb_counts(board)
 
-    expected_board = [
-      [
-        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected}
-      ],
-      [
-        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
-        %Tile{type: :bomb, adjacent_bomb_count: 0, state: :unselected}
-      ],
-      [
-        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected}
-      ]
-    ]
-
-    assert(board_with_bomb_counts == expected_board)
+    assert format(board_with_bomb_counts) == [
+             [0, 1, 1],
+             [0, 1, 0],
+             [0, 1, 1]
+           ]
   end
 
   test "a 3x3 board with one bomb in the seventh tile" do
@@ -216,25 +118,11 @@ defmodule AdjacentBombCountTest do
 
     board_with_bomb_counts = AdjacentBombCount.set_adjacent_bomb_counts(board)
 
-    expected_board = [
-      [
-        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected}
-      ],
-      [
-        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected}
-      ],
-      [
-        %Tile{type: :bomb, adjacent_bomb_count: 0, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected}
-      ]
-    ]
-
-    assert(board_with_bomb_counts == expected_board)
+    assert format(board_with_bomb_counts) == [
+             [0, 0, 0],
+             [1, 1, 0],
+             [0, 1, 0]
+           ]
   end
 
   test "a 3x3 board with one bomb in the eighth tile" do
@@ -246,25 +134,11 @@ defmodule AdjacentBombCountTest do
 
     board_with_bomb_counts = AdjacentBombCount.set_adjacent_bomb_counts(board)
 
-    expected_board = [
-      [
-        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected}
-      ],
-      [
-        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected}
-      ],
-      [
-        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
-        %Tile{type: :bomb, adjacent_bomb_count: 0, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected}
-      ]
-    ]
-
-    assert(board_with_bomb_counts == expected_board)
+    assert format(board_with_bomb_counts) == [
+             [0, 0, 0],
+             [1, 1, 1],
+             [1, 0, 1]
+           ]
   end
 
   test "a 3x3 board with one bomb in the nineth tile" do
@@ -276,25 +150,11 @@ defmodule AdjacentBombCountTest do
 
     board_with_bomb_counts = AdjacentBombCount.set_adjacent_bomb_counts(board)
 
-    expected_board = [
-      [
-        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected}
-      ],
-      [
-        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected}
-      ],
-      [
-        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
-        %Tile{type: :bomb, adjacent_bomb_count: 0, state: :unselected}
-      ]
-    ]
-
-    assert(board_with_bomb_counts == expected_board)
+    assert format(board_with_bomb_counts) == [
+             [0, 0, 0],
+             [0, 1, 1],
+             [0, 1, 0]
+           ]
   end
 
   test "a 3x3 board with two bombs, in the first and second tiles" do
@@ -308,25 +168,11 @@ defmodule AdjacentBombCountTest do
 
     board_with_bomb_counts = AdjacentBombCount.set_adjacent_bomb_counts(board)
 
-    expected_board = [
-      [
-        %Tile{type: :bomb, adjacent_bomb_count: 1, state: :unselected},
-        %Tile{type: :bomb, adjacent_bomb_count: 1, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected}
-      ],
-      [
-        %Tile{type: :empty, adjacent_bomb_count: 2, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 2, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected}
-      ],
-      [
-        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected}
-      ]
-    ]
-
-    assert(board_with_bomb_counts == expected_board)
+    assert format(board_with_bomb_counts) == [
+             [1, 1, 1],
+             [2, 2, 1],
+             [0, 0, 0]
+           ]
   end
 
   test "a 3x3 board with two bombs, in the first and nineth tiles" do
@@ -340,24 +186,16 @@ defmodule AdjacentBombCountTest do
 
     board_with_bomb_counts = AdjacentBombCount.set_adjacent_bomb_counts(board)
 
-    expected_board = [
-      [
-        %Tile{type: :bomb, adjacent_bomb_count: 0, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected}
-      ],
-      [
-        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 2, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected}
-      ],
-      [
-        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
-        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
-        %Tile{type: :bomb, adjacent_bomb_count: 0, state: :unselected}
-      ]
-    ]
+    assert format(board_with_bomb_counts) == [
+             [0, 1, 0],
+             [1, 2, 1],
+             [0, 1, 0]
+           ]
+  end
 
-    assert(board_with_bomb_counts == expected_board)
+  defp format(board) do
+    Board.update_all_tiles(board, fn board, tile, location ->
+      Board.replace_tile(board, location, tile.adjacent_bomb_count)
+    end)
   end
 end

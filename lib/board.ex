@@ -29,13 +29,20 @@ defmodule Board do
   def select_tile(board, coordinate_pair) do
     tile = get_tile(board, coordinate_pair)
 
-    if Tile.is_selected?(tile) do
+    if Tile.is_revealed?(tile) do
       {:error, :already_selected}
     else
-      selected_tile = Tile.select(tile)
-      result = replace_tile(board, coordinate_pair, selected_tile)
-      {:ok, result}
+      board =
+        reveal_tile(board, coordinate_pair)
+        |> FloodFiller.flood_fill(coordinate_pair)
+
+      {:ok, board}
     end
+  end
+
+  def reveal_tile(board, coordinate_pair) do
+    tile = get_tile(board, coordinate_pair)
+    replace_tile(board, coordinate_pair, Tile.reveal(tile))
   end
 
   def replace_tile(board, {row_index, col_index}, value) do

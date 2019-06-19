@@ -4,15 +4,14 @@ defmodule Game do
 
     move = get_move(game_state.config.reader)
 
-    {:ok, board} = Board.select_tile(game_state.board, move)
-
-    board_with_bombs_and_counts =
-      board
+    board =
+      Board.reveal_tile(game_state.board, move)
       |> BombPlacer.place_bombs(game_state.config.randomizer)
       |> AdjacentBombCount.set_adjacent_bomb_counts()
+      |> FloodFiller.flood_fill(move)
 
     game_state
-    |> GameState.set_board(board_with_bombs_and_counts)
+    |> GameState.set_board(board)
     |> GameState.set_status(:in_progress)
     |> play()
   end
@@ -30,7 +29,7 @@ defmodule Game do
         |> play()
 
       {:error, :already_selected} ->
-        message = "You've already made that move! Please try again.\n"
+        message = "That tile has already been selected! Please try again.\n"
         game_state.config.writer.write(message)
         play(game_state)
     end

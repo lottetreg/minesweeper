@@ -7,25 +7,25 @@ defmodule PlayerIsToldToTryAgainIfTheyReenterAMoveTest do
   setup :verify_on_exit!
 
   test "the player is told to try again if they reenter a move" do
-    first_row_coordinate_pairs = [
+    diagonal_coordinate_pairs = [
       {0, 0},
-      {0, 1},
-      {0, 2},
-      {0, 3},
-      {0, 4},
-      {0, 5},
-      {0, 6},
-      {0, 7},
-      {0, 8},
-      {0, 9}
+      {1, 1},
+      {2, 2},
+      {3, 3},
+      {4, 4},
+      {5, 5},
+      {6, 6},
+      {7, 7},
+      {8, 8},
+      {9, 9}
     ]
 
     randomizer =
       MockRandomizer
-      |> allow_random_coordinate_pair_to_return(first_row_coordinate_pairs)
+      |> allow_random_coordinate_pair_to_return(diagonal_coordinate_pairs)
 
-    empty_tile_location = "4E"
-    bomb_tile_location = "0A"
+    empty_tile_location = "6C"
+    bomb_tile_location = "1B"
 
     reader =
       MockReader
@@ -73,19 +73,19 @@ defmodule PlayerIsToldToTryAgainIfTheyReenterAMoveTest do
         [
           "0 | | | | | | | | | | |\n",
           "1 | | | | | | | | | | |\n",
-          "2 | | | | | | | | | | |\n",
-          "3 | | | | | | | | | | |\n",
-          "4 | | | | |0| | | | | |\n",
-          "5 | | | | | | | | | | |\n",
-          "6 | | | | | | | | | | |\n",
-          "7 | | | | | | | | | | |\n",
-          "8 | | | | | | | | | | |\n",
-          "9 | | | | | | | | | | |\n"
+          "2 |1| | | | | | | | | |\n",
+          "3 |0|1| | | | | | | | |\n",
+          "4 |0|0|1| | | | | | | |\n",
+          "5 |0|0|0|1| | | | | | |\n",
+          "6 |0|0|0|0|1| | | | | |\n",
+          "7 |0|0|0|0|0|1| | | | |\n",
+          "8 |0|0|0|0|0|0|1| | | |\n",
+          "9 |0|0|0|0|0|0|0|1| | |\n"
         ]
       ]
     }
 
-    assert_received {:write, "You've already made that move! Please try again.\n"}
+    assert_received {:write, "That tile has already been selected! Please try again.\n"}
 
     assert_received {
       :write,
@@ -94,14 +94,14 @@ defmodule PlayerIsToldToTryAgainIfTheyReenterAMoveTest do
         [
           "0 | | | | | | | | | | |\n",
           "1 | | | | | | | | | | |\n",
-          "2 | | | | | | | | | | |\n",
-          "3 | | | | | | | | | | |\n",
-          "4 | | | | |0| | | | | |\n",
-          "5 | | | | | | | | | | |\n",
-          "6 | | | | | | | | | | |\n",
-          "7 | | | | | | | | | | |\n",
-          "8 | | | | | | | | | | |\n",
-          "9 | | | | | | | | | | |\n"
+          "2 |1| | | | | | | | | |\n",
+          "3 |0|1| | | | | | | | |\n",
+          "4 |0|0|1| | | | | | | |\n",
+          "5 |0|0|0|1| | | | | | |\n",
+          "6 |0|0|0|0|1| | | | | |\n",
+          "7 |0|0|0|0|0|1| | | | |\n",
+          "8 |0|0|0|0|0|0|1| | | |\n",
+          "9 |0|0|0|0|0|0|0|1| | |\n"
         ]
       ]
     }
@@ -111,16 +111,16 @@ defmodule PlayerIsToldToTryAgainIfTheyReenterAMoveTest do
       [
         "   A B C D E F G H I J\n",
         [
-          "0 |*| | | | | | | | | |\n",
-          "1 | | | | | | | | | | |\n",
-          "2 | | | | | | | | | | |\n",
-          "3 | | | | | | | | | | |\n",
-          "4 | | | | |0| | | | | |\n",
-          "5 | | | | | | | | | | |\n",
-          "6 | | | | | | | | | | |\n",
-          "7 | | | | | | | | | | |\n",
-          "8 | | | | | | | | | | |\n",
-          "9 | | | | | | | | | | |\n"
+          "0 | | | | | | | | | | |\n",
+          "1 | |*| | | | | | | | |\n",
+          "2 |1| | | | | | | | | |\n",
+          "3 |0|1| | | | | | | | |\n",
+          "4 |0|0|1| | | | | | | |\n",
+          "5 |0|0|0|1| | | | | | |\n",
+          "6 |0|0|0|0|1| | | | | |\n",
+          "7 |0|0|0|0|0|1| | | | |\n",
+          "8 |0|0|0|0|0|0|1| | | |\n",
+          "9 |0|0|0|0|0|0|0|1| | |\n"
         ]
       ]
     }
