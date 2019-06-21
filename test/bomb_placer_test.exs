@@ -13,7 +13,7 @@ defmodule BombPlacerTest do
 
     number_of_bombs =
       Board.all_tiles(board)
-      |> Enum.count(fn tile -> Tile.is_bomb?(tile) end)
+      |> Enum.count(&Tile.is_bomb?/1)
 
     assert(number_of_bombs == 10)
   end
@@ -25,7 +25,7 @@ defmodule BombPlacerTest do
 
     number_of_bombs =
       Board.all_tiles(board)
-      |> Enum.count(fn tile -> Tile.is_bomb?(tile) end)
+      |> Enum.count(&Tile.is_bomb?/1)
 
     assert(number_of_bombs == 2)
   end

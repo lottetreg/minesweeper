@@ -1,5 +1,5 @@
 defmodule Minesweeper do
   def main(_args) do
-    Game.play(GameState.new())
+    Game.start(GameState.new())
   end
 end

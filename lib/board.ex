@@ -21,9 +21,13 @@ defmodule Board do
   end
 
   def get_tile(board, {row_index, col_index}) do
-    board
-    |> Enum.at(row_index)
-    |> Enum.at(col_index)
+    if out_of_bounds?(board, {row_index, col_index}) do
+      nil
+    else
+      board
+      |> Enum.at(row_index)
+      |> Enum.at(col_index)
+    end
   end
 
   def select_tile(board, coordinate_pair) do
@@ -69,5 +73,18 @@ defmodule Board do
 
   defp empty_tile do
     Tile.new(:empty)
+  end
+
+  defp out_of_bounds?(board, {row_index, col_index}) do
+    row_out_of_bounds?(board, row_index) ||
+      col_out_of_bounds?(board, col_index)
+  end
+
+  defp row_out_of_bounds?(board, row_index) do
+    row_index < 0 || row_index >= Board.row_count(board)
+  end
+
+  defp col_out_of_bounds?(board, col_index) do
+    col_index < 0 || col_index >= Board.col_count(board)
   end
 end

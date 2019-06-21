@@ -41,6 +41,15 @@ defmodule BoardTest do
     assert(tile == board |> Enum.at(0) |> Enum.at(0))
   end
 
+  test "returns nil if there isn't a tile at a given location" do
+    board = Board.new().board
+
+    assert(Board.get_tile(board, {-1, 0}) == nil)
+    assert(Board.get_tile(board, {0, -1}) == nil)
+    assert(Board.get_tile(board, {10, 0}) == nil)
+    assert(Board.get_tile(board, {0, 10}) == nil)
+  end
+
   test "returns a new board with a replaced tile at a given location" do
     old_board = Board.new().board
 
@@ -49,28 +58,6 @@ defmodule BoardTest do
     new_board = Board.replace_tile(old_board, {1, 1}, Tile.new(:bomb))
 
     assert(Board.get_tile(new_board, {1, 1}) |> Tile.is_bomb?())
-  end
-
-  test "reveals the selected tile and all of its contiguous tiles with 0 adjacent bombs" do
-    board = Board.new(3, 3).board
-
-    assert(
-      format(board) == [
-        [:hidden, :hidden, :hidden],
-        [:hidden, :hidden, :hidden],
-        [:hidden, :hidden, :hidden]
-      ]
-    )
-
-    {:ok, board} = Board.select_tile(board, {0, 0})
-
-    assert(
-      format(board) == [
-        [:revealed, :revealed, :revealed],
-        [:revealed, :revealed, :revealed],
-        [:revealed, :revealed, :revealed]
-      ]
-    )
   end
 
   test "returns error data if the tile has already been revealed" do
@@ -86,7 +73,7 @@ defmodule BoardTest do
 
     all_tiles_are_hidden? =
       Board.all_tiles(old_board)
-      |> Enum.all?(fn tile -> Tile.is_hidden?(tile) end)
+      |> Enum.all?(&Tile.is_hidden?/1)
 
     assert(all_tiles_are_hidden? == true)
 
@@ -94,18 +81,12 @@ defmodule BoardTest do
 
     all_tiles_are_revealed? =
       Board.all_tiles(new_board)
-      |> Enum.all?(fn tile -> Tile.is_revealed?(tile) end)
+      |> Enum.all?(&Tile.is_revealed?/1)
 
     assert(all_tiles_are_revealed? == true)
   end
 
   defp reveal_tile(board, tile, tile_location) do
     Board.replace_tile(board, tile_location, Tile.reveal(tile))
-  end
-
-  defp format(board) do
-    Board.update_all_tiles(board, fn board, tile, location ->
-      Board.replace_tile(board, location, tile.state)
-    end)
   end
 end

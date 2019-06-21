@@ -1,12 +1,12 @@
 defmodule GameRules do
   def player_lost?(board) do
     Board.all_tiles(board)
-    |> Enum.any?(fn tile -> Tile.exploded?(tile) end)
+    |> Enum.any?(&Tile.exploded?/1)
   end
 
   def player_won?(board) do
     Board.all_tiles(board)
-    |> Enum.filter(fn tile -> Tile.is_empty?(tile) end)
-    |> Enum.all?(fn empty_tile -> Tile.is_revealed?(empty_tile) end)
+    |> Enum.filter(&Tile.is_empty?/1)
+    |> Enum.all?(&Tile.is_revealed?/1)
   end
 end

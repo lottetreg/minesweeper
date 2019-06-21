@@ -1,11 +1,12 @@
 defmodule GameState do
-  defstruct [:board, :config, :status]
+  defstruct [:board, :config, :status, :number_of_bombs]
 
   def new do
     %GameState{
       board: Board.new().board,
       config: default_config(),
-      status: :awaiting_first_move
+      status: :awaiting_first_move,
+      number_of_bombs: 1
     }
   end
 
@@ -27,5 +28,9 @@ defmodule GameState do
 
   def set_status(game_state, status) do
     %{game_state | status: status}
+  end
+
+  def set_number_of_bombs(game_state, number_of_bombs) do
+    %{game_state | number_of_bombs: number_of_bombs}
   end
 end

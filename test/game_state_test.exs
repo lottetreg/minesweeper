@@ -18,4 +18,8 @@ defmodule GameStateTest do
   test "is initialized with a default status" do
     assert(GameState.new().status == :awaiting_first_move)
   end
+
+  test "is initialized with a default number_of_bombs" do
+    assert(GameState.new().number_of_bombs == 1)
+  end
 end

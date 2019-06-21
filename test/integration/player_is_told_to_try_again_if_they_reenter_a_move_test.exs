@@ -24,17 +24,19 @@ defmodule PlayerIsToldToTryAgainIfTheyReenterAMoveTest do
       MockRandomizer
       |> allow_random_coordinate_pair_to_return(diagonal_coordinate_pairs)
 
+    number_of_bombs = "10"
     empty_tile_location = "6C"
 
     reader =
       MockReader
+      |> expect(:read, fn -> number_of_bombs end)
       |> expect(:read, fn -> empty_tile_location end)
       |> expect(:read, fn -> empty_tile_location end)
-      |> expect(:read, fn -> Game.exit_command() end)
+      |> expect(:read, fn -> InputFilter.exit_command() end)
 
     writer =
       MockWriter
-      |> expect(:write, 4, fn string -> send(self(), {:write, string}) end)
+      |> expect(:write, 5, fn string -> send(self(), {:write, string}) end)
 
     game_state =
       GameState.new()
@@ -44,7 +46,12 @@ defmodule PlayerIsToldToTryAgainIfTheyReenterAMoveTest do
         randomizer: randomizer
       })
 
-    Game.play(game_state)
+    Game.start(game_state)
+
+    assert_received {
+      :write,
+      "Enter the number of mines to place on the board (1 to 99).\n"
+    }
 
     assert_received {
       :write,

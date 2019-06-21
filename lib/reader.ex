@@ -3,5 +3,6 @@ defmodule Reader do
 
   def read do
     IO.read(:line)
+    |> String.trim()
   end
 end
