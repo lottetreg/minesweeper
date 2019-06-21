@@ -25,17 +25,16 @@ defmodule PlayerIsToldToTryAgainIfTheyReenterAMoveTest do
       |> allow_random_coordinate_pair_to_return(diagonal_coordinate_pairs)
 
     empty_tile_location = "6C"
-    bomb_tile_location = "1B"
 
     reader =
       MockReader
       |> expect(:read, fn -> empty_tile_location end)
       |> expect(:read, fn -> empty_tile_location end)
-      |> expect(:read, fn -> bomb_tile_location end)
+      |> expect(:read, fn -> Game.exit_command() end)
 
     writer =
       MockWriter
-      |> expect(:write, 6, fn string -> send(self(), {:write, string}) end)
+      |> expect(:write, 4, fn string -> send(self(), {:write, string}) end)
 
     game_state =
       GameState.new()
@@ -105,26 +104,5 @@ defmodule PlayerIsToldToTryAgainIfTheyReenterAMoveTest do
         ]
       ]
     }
-
-    assert_received {
-      :write,
-      [
-        "   A B C D E F G H I J\n",
-        [
-          "0 | | | | | | | | | | |\n",
-          "1 | |*| | | | | | | | |\n",
-          "2 |1| | | | | | | | | |\n",
-          "3 |0|1| | | | | | | | |\n",
-          "4 |0|0|1| | | | | | | |\n",
-          "5 |0|0|0|1| | | | | | |\n",
-          "6 |0|0|0|0|1| | | | | |\n",
-          "7 |0|0|0|0|0|1| | | | |\n",
-          "8 |0|0|0|0|0|0|1| | | |\n",
-          "9 |0|0|0|0|0|0|0|1| | |\n"
-        ]
-      ]
-    }
-
-    assert_received {:write, "You lose!\n"}
   end
 end
