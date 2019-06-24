@@ -14,7 +14,7 @@ defmodule BoardTest do
   test "each tile on a new board has not been selected" do
     Enum.each(Board.new().board, fn row ->
       Enum.each(row, fn tile ->
-        assert(Tile.is_unselected?(tile))
+        assert(Tile.is_hidden?(tile))
       end)
     end)
   end
@@ -51,35 +51,61 @@ defmodule BoardTest do
     assert(Board.get_tile(new_board, {1, 1}) |> Tile.is_bomb?())
   end
 
-  test "returns a new board with the tile selected at the given location" do
-    old_board = Board.new().board
+  test "reveals the selected tile and all of its contiguous tiles with 0 adjacent bombs" do
+    board = Board.new(3, 3).board
 
-    assert(Board.get_tile(old_board, {1, 1}) |> Tile.is_unselected?())
+    assert(
+      format(board) == [
+        [:hidden, :hidden, :hidden],
+        [:hidden, :hidden, :hidden],
+        [:hidden, :hidden, :hidden]
+      ]
+    )
 
-    {:ok, new_board} = Board.select_tile(old_board, {1, 1})
+    {:ok, board} = Board.select_tile(board, {0, 0})
 
-    assert(Board.get_tile(new_board, {1, 1}) |> Tile.is_selected?())
+    assert(
+      format(board) == [
+        [:revealed, :revealed, :revealed],
+        [:revealed, :revealed, :revealed],
+        [:revealed, :revealed, :revealed]
+      ]
+    )
+  end
+
+  test "returns error data if the tile has already been revealed" do
+    board =
+      Board.new().board
+      |> Board.reveal_tile({0, 0})
+
+    assert(Board.select_tile(board, {0, 0}) == {:error, :already_selected})
   end
 
   test "takes a function that returns a new board and calls it for every tile in the board" do
     old_board = Board.new().board
 
-    all_tiles_are_unselected? =
+    all_tiles_are_hidden? =
       Board.all_tiles(old_board)
-      |> Enum.all?(fn tile -> Tile.is_unselected?(tile) end)
+      |> Enum.all?(fn tile -> Tile.is_hidden?(tile) end)
 
-    assert(all_tiles_are_unselected? == true)
+    assert(all_tiles_are_hidden? == true)
 
-    new_board = Board.update_all_tiles(old_board, &select_tile/3)
+    new_board = Board.update_all_tiles(old_board, &reveal_tile/3)
 
-    all_tiles_are_selected? =
+    all_tiles_are_revealed? =
       Board.all_tiles(new_board)
-      |> Enum.all?(fn tile -> Tile.is_selected?(tile) end)
+      |> Enum.all?(fn tile -> Tile.is_revealed?(tile) end)
 
-    assert(all_tiles_are_selected? == true)
+    assert(all_tiles_are_revealed? == true)
   end
 
-  defp select_tile(board, tile, tile_location) do
-    Board.replace_tile(board, tile_location, Tile.select(tile))
+  defp reveal_tile(board, tile, tile_location) do
+    Board.replace_tile(board, tile_location, Tile.reveal(tile))
+  end
+
+  defp format(board) do
+    Board.update_all_tiles(board, fn board, tile, location ->
+      Board.replace_tile(board, location, tile.state)
+    end)
   end
 end

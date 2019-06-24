@@ -10,15 +10,15 @@ defmodule BoardPresenter do
     ["   A B C D E F G H I J\n", rows_with_numbers]
   end
 
-  defp present_tile(%Tile{state: :unselected}, acc) do
+  defp present_tile(%Tile{state: :hidden}, acc) do
     acc <> @blank_space
   end
 
-  defp present_tile(%Tile{state: :selected, type: :empty} = tile, acc) do
+  defp present_tile(%Tile{state: :revealed, type: :empty} = tile, acc) do
     acc <> Integer.to_string(tile.adjacent_bomb_count) <> "|"
   end
 
-  defp present_tile(%Tile{state: :selected, type: :bomb}, acc) do
+  defp present_tile(%Tile{state: :revealed, type: :bomb}, acc) do
     acc <> "*|"
   end
 end

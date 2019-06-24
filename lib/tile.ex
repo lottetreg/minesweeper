@@ -7,13 +7,13 @@ defmodule Tile do
   defp new_with_type(type) do
     %Tile{
       type: type,
-      state: :unselected,
+      state: :hidden,
       adjacent_bomb_count: 0
     }
   end
 
-  def select(tile) do
-    %{tile | state: :selected}
+  def reveal(tile) do
+    %{tile | state: :revealed}
   end
 
   def set_adjacent_bomb_count(tile, count) do
@@ -21,7 +21,7 @@ defmodule Tile do
   end
 
   def exploded?(tile) do
-    is_bomb?(tile) && is_selected?(tile)
+    is_bomb?(tile) && is_revealed?(tile)
   end
 
   def is_empty?(tile) do
@@ -32,11 +32,11 @@ defmodule Tile do
     tile.type == :bomb
   end
 
-  def is_selected?(tile) do
-    tile.state == :selected
+  def is_revealed?(tile) do
+    tile.state == :revealed
   end
 
-  def is_unselected?(tile) do
-    tile.state == :unselected
+  def is_hidden?(tile) do
+    tile.state == :hidden
   end
 end

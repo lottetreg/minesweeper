@@ -61,9 +61,9 @@ defmodule BombPlacerTest do
     selected_tile_location = {4, 4}
     other_tile_location = {0, 0}
 
-    {:ok, board} =
+    board =
       Board.new().board
-      |> Board.select_tile(selected_tile_location)
+      |> Board.reveal_tile(selected_tile_location)
 
     randomizer =
       MockRandomizer

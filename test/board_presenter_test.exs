@@ -26,7 +26,7 @@ defmodule BoardPresenterTest do
   end
 
   test "returns a list representation of the given board with selected tiles" do
-    {:ok, board} = Board.select_tile(Board.new().board, {2, 5})
+    board = Board.reveal_tile(Board.new().board, {2, 5})
 
     presented_board = BoardPresenter.present(board)
 

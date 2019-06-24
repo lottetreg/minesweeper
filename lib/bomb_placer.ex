@@ -16,7 +16,7 @@ defmodule BombPlacer do
       )
 
     board =
-      if tile_is_unselected?(board, coordinates) do
+      if tile_is_hidden?(board, coordinates) do
         place_bomb(board, coordinates)
       else
         board
@@ -30,9 +30,9 @@ defmodule BombPlacer do
     )
   end
 
-  defp tile_is_unselected?(board, coordinates) do
+  defp tile_is_hidden?(board, coordinates) do
     Board.get_tile(board, coordinates)
-    |> Tile.is_unselected?()
+    |> Tile.is_hidden?()
   end
 
   defp place_bomb(board, coordinate_pair) do
