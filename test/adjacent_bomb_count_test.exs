@@ -8,19 +8,19 @@ defmodule AdjacentBombCountTest do
 
     expected_board = [
       [
-        %EmptyTile{adjacent_bomb_count: 0, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 0, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 0, state: :unselected}
+        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected}
       ],
       [
-        %EmptyTile{adjacent_bomb_count: 0, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 0, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 0, state: :unselected}
+        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected}
       ],
       [
-        %EmptyTile{adjacent_bomb_count: 0, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 0, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 0, state: :unselected}
+        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected}
       ]
     ]
 
@@ -32,25 +32,25 @@ defmodule AdjacentBombCountTest do
 
     board =
       Board.new(3, 3).board
-      |> Board.replace_tile(first_tile, BombTile.new())
+      |> Board.replace_tile(first_tile, Tile.new(:bomb))
 
     board_with_bomb_counts = AdjacentBombCount.update_adjacent_bomb_counts(board)
 
     expected_board = [
       [
-        %BombTile{adjacent_bomb_count: 0, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 1, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 0, state: :unselected}
+        %Tile{type: :bomb, adjacent_bomb_count: 0, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected}
       ],
       [
-        %EmptyTile{adjacent_bomb_count: 1, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 1, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 0, state: :unselected}
+        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected}
       ],
       [
-        %EmptyTile{adjacent_bomb_count: 0, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 0, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 0, state: :unselected}
+        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected}
       ]
     ]
 
@@ -62,25 +62,25 @@ defmodule AdjacentBombCountTest do
 
     board =
       Board.new(3, 3).board
-      |> Board.replace_tile(second_tile, BombTile.new())
+      |> Board.replace_tile(second_tile, Tile.new(:bomb))
 
     board_with_bomb_counts = AdjacentBombCount.update_adjacent_bomb_counts(board)
 
     expected_board = [
       [
-        %EmptyTile{adjacent_bomb_count: 1, state: :unselected},
-        %BombTile{adjacent_bomb_count: 0, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 1, state: :unselected}
+        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
+        %Tile{type: :bomb, adjacent_bomb_count: 0, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected}
       ],
       [
-        %EmptyTile{adjacent_bomb_count: 1, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 1, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 1, state: :unselected}
+        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected}
       ],
       [
-        %EmptyTile{adjacent_bomb_count: 0, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 0, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 0, state: :unselected}
+        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected}
       ]
     ]
 
@@ -92,25 +92,25 @@ defmodule AdjacentBombCountTest do
 
     board =
       Board.new(3, 3).board
-      |> Board.replace_tile(third_tile, BombTile.new())
+      |> Board.replace_tile(third_tile, Tile.new(:bomb))
 
     board_with_bomb_counts = AdjacentBombCount.update_adjacent_bomb_counts(board)
 
     expected_board = [
       [
-        %EmptyTile{adjacent_bomb_count: 0, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 1, state: :unselected},
-        %BombTile{adjacent_bomb_count: 0, state: :unselected}
+        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
+        %Tile{type: :bomb, adjacent_bomb_count: 0, state: :unselected}
       ],
       [
-        %EmptyTile{adjacent_bomb_count: 0, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 1, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 1, state: :unselected}
+        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected}
       ],
       [
-        %EmptyTile{adjacent_bomb_count: 0, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 0, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 0, state: :unselected}
+        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected}
       ]
     ]
 
@@ -122,25 +122,25 @@ defmodule AdjacentBombCountTest do
 
     board =
       Board.new(3, 3).board
-      |> Board.replace_tile(fourth_tile, BombTile.new())
+      |> Board.replace_tile(fourth_tile, Tile.new(:bomb))
 
     board_with_bomb_counts = AdjacentBombCount.update_adjacent_bomb_counts(board)
 
     expected_board = [
       [
-        %EmptyTile{adjacent_bomb_count: 1, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 1, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 0, state: :unselected}
+        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected}
       ],
       [
-        %BombTile{adjacent_bomb_count: 0, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 1, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 0, state: :unselected}
+        %Tile{type: :bomb, adjacent_bomb_count: 0, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected}
       ],
       [
-        %EmptyTile{adjacent_bomb_count: 1, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 1, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 0, state: :unselected}
+        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected}
       ]
     ]
 
@@ -152,25 +152,25 @@ defmodule AdjacentBombCountTest do
 
     board =
       Board.new(3, 3).board
-      |> Board.replace_tile(fifth_tile, BombTile.new())
+      |> Board.replace_tile(fifth_tile, Tile.new(:bomb))
 
     board_with_bomb_counts = AdjacentBombCount.update_adjacent_bomb_counts(board)
 
     expected_board = [
       [
-        %EmptyTile{adjacent_bomb_count: 1, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 1, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 1, state: :unselected}
+        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected}
       ],
       [
-        %EmptyTile{adjacent_bomb_count: 1, state: :unselected},
-        %BombTile{adjacent_bomb_count: 0, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 1, state: :unselected}
+        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
+        %Tile{type: :bomb, adjacent_bomb_count: 0, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected}
       ],
       [
-        %EmptyTile{adjacent_bomb_count: 1, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 1, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 1, state: :unselected}
+        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected}
       ]
     ]
 
@@ -182,25 +182,25 @@ defmodule AdjacentBombCountTest do
 
     board =
       Board.new(3, 3).board
-      |> Board.replace_tile(sixth_tile, BombTile.new())
+      |> Board.replace_tile(sixth_tile, Tile.new(:bomb))
 
     board_with_bomb_counts = AdjacentBombCount.update_adjacent_bomb_counts(board)
 
     expected_board = [
       [
-        %EmptyTile{adjacent_bomb_count: 0, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 1, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 1, state: :unselected}
+        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected}
       ],
       [
-        %EmptyTile{adjacent_bomb_count: 0, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 1, state: :unselected},
-        %BombTile{adjacent_bomb_count: 0, state: :unselected}
+        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
+        %Tile{type: :bomb, adjacent_bomb_count: 0, state: :unselected}
       ],
       [
-        %EmptyTile{adjacent_bomb_count: 0, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 1, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 1, state: :unselected}
+        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected}
       ]
     ]
 
@@ -212,25 +212,25 @@ defmodule AdjacentBombCountTest do
 
     board =
       Board.new(3, 3).board
-      |> Board.replace_tile(seventh_tile, BombTile.new())
+      |> Board.replace_tile(seventh_tile, Tile.new(:bomb))
 
     board_with_bomb_counts = AdjacentBombCount.update_adjacent_bomb_counts(board)
 
     expected_board = [
       [
-        %EmptyTile{adjacent_bomb_count: 0, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 0, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 0, state: :unselected}
+        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected}
       ],
       [
-        %EmptyTile{adjacent_bomb_count: 1, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 1, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 0, state: :unselected}
+        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected}
       ],
       [
-        %BombTile{adjacent_bomb_count: 0, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 1, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 0, state: :unselected}
+        %Tile{type: :bomb, adjacent_bomb_count: 0, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected}
       ]
     ]
 
@@ -242,25 +242,25 @@ defmodule AdjacentBombCountTest do
 
     board =
       Board.new(3, 3).board
-      |> Board.replace_tile(eighth_tile, BombTile.new())
+      |> Board.replace_tile(eighth_tile, Tile.new(:bomb))
 
     board_with_bomb_counts = AdjacentBombCount.update_adjacent_bomb_counts(board)
 
     expected_board = [
       [
-        %EmptyTile{adjacent_bomb_count: 0, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 0, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 0, state: :unselected}
+        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected}
       ],
       [
-        %EmptyTile{adjacent_bomb_count: 1, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 1, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 1, state: :unselected}
+        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected}
       ],
       [
-        %EmptyTile{adjacent_bomb_count: 1, state: :unselected},
-        %BombTile{adjacent_bomb_count: 0, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 1, state: :unselected}
+        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
+        %Tile{type: :bomb, adjacent_bomb_count: 0, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected}
       ]
     ]
 
@@ -272,25 +272,25 @@ defmodule AdjacentBombCountTest do
 
     board =
       Board.new(3, 3).board
-      |> Board.replace_tile(nineth_tile, BombTile.new())
+      |> Board.replace_tile(nineth_tile, Tile.new(:bomb))
 
     board_with_bomb_counts = AdjacentBombCount.update_adjacent_bomb_counts(board)
 
     expected_board = [
       [
-        %EmptyTile{adjacent_bomb_count: 0, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 0, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 0, state: :unselected}
+        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected}
       ],
       [
-        %EmptyTile{adjacent_bomb_count: 0, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 1, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 1, state: :unselected}
+        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected}
       ],
       [
-        %EmptyTile{adjacent_bomb_count: 0, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 1, state: :unselected},
-        %BombTile{adjacent_bomb_count: 0, state: :unselected}
+        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
+        %Tile{type: :bomb, adjacent_bomb_count: 0, state: :unselected}
       ]
     ]
 
@@ -303,26 +303,26 @@ defmodule AdjacentBombCountTest do
 
     board =
       Board.new(3, 3).board
-      |> Board.replace_tile(first_tile, BombTile.new())
-      |> Board.replace_tile(second_tile, BombTile.new())
+      |> Board.replace_tile(first_tile, Tile.new(:bomb))
+      |> Board.replace_tile(second_tile, Tile.new(:bomb))
 
     board_with_bomb_counts = AdjacentBombCount.update_adjacent_bomb_counts(board)
 
     expected_board = [
       [
-        %BombTile{adjacent_bomb_count: 1, state: :unselected},
-        %BombTile{adjacent_bomb_count: 1, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 1, state: :unselected}
+        %Tile{type: :bomb, adjacent_bomb_count: 1, state: :unselected},
+        %Tile{type: :bomb, adjacent_bomb_count: 1, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected}
       ],
       [
-        %EmptyTile{adjacent_bomb_count: 2, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 2, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 1, state: :unselected}
+        %Tile{type: :empty, adjacent_bomb_count: 2, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 2, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected}
       ],
       [
-        %EmptyTile{adjacent_bomb_count: 0, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 0, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 0, state: :unselected}
+        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected}
       ]
     ]
 
@@ -335,26 +335,26 @@ defmodule AdjacentBombCountTest do
 
     board =
       Board.new(3, 3).board
-      |> Board.replace_tile(first_tile, BombTile.new())
-      |> Board.replace_tile(nineth_tile, BombTile.new())
+      |> Board.replace_tile(first_tile, Tile.new(:bomb))
+      |> Board.replace_tile(nineth_tile, Tile.new(:bomb))
 
     board_with_bomb_counts = AdjacentBombCount.update_adjacent_bomb_counts(board)
 
     expected_board = [
       [
-        %BombTile{adjacent_bomb_count: 0, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 1, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 0, state: :unselected}
+        %Tile{type: :bomb, adjacent_bomb_count: 0, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected}
       ],
       [
-        %EmptyTile{adjacent_bomb_count: 1, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 2, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 1, state: :unselected}
+        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 2, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected}
       ],
       [
-        %EmptyTile{adjacent_bomb_count: 0, state: :unselected},
-        %EmptyTile{adjacent_bomb_count: 1, state: :unselected},
-        %BombTile{adjacent_bomb_count: 0, state: :unselected}
+        %Tile{type: :empty, adjacent_bomb_count: 0, state: :unselected},
+        %Tile{type: :empty, adjacent_bomb_count: 1, state: :unselected},
+        %Tile{type: :bomb, adjacent_bomb_count: 0, state: :unselected}
       ]
     ]
 

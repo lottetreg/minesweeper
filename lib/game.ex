@@ -4,13 +4,15 @@ defmodule Game do
 
     move = get_move(game_state.config.reader)
 
-    board =
-      Board.select_tile(game_state.board, move)
+    {:ok, board} = Board.select_tile(game_state.board, move)
+
+    board_with_bombs_and_counts =
+      board
       |> BombPlacer.place_bombs(game_state.config.randomizer)
       |> AdjacentBombCount.update_adjacent_bomb_counts()
 
     game_state
-    |> GameState.set_board(board)
+    |> GameState.set_board(board_with_bombs_and_counts)
     |> GameState.set_status(:in_progress)
     |> play()
   end
@@ -20,12 +22,18 @@ defmodule Game do
 
     move = get_move(game_state.config.reader)
 
-    board = Board.select_tile(game_state.board, move)
+    case Board.select_tile(game_state.board, move) do
+      {:ok, board} ->
+        game_state
+        |> GameState.set_board(board)
+        |> update_game_state_status()
+        |> play()
 
-    game_state
-    |> GameState.set_board(board)
-    |> update_game_state_status()
-    |> play()
+      {:error, :already_selected} ->
+        message = "You've already made that move! Please try again.\n"
+        game_state.config.writer.write(message)
+        play(game_state)
+    end
   end
 
   def play(%GameState{status: :player_lost} = game_state) do

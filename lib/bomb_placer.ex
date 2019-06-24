@@ -29,11 +29,11 @@ defmodule BombPlacer do
   end
 
   defp place_bomb(board, coordinate_pair) do
-    Board.replace_tile(board, coordinate_pair, BombTile.new())
+    Board.replace_tile(board, coordinate_pair, Tile.new(:bomb))
   end
 
   defp current_bomb_count(board) do
     Board.all_tiles(board)
-    |> Enum.count(fn tile -> Tile.is_a?(tile, BombTile) end)
+    |> Enum.count(fn tile -> Tile.is_bomb?(tile) end)
   end
 end
