@@ -14,7 +14,7 @@ defmodule BoardTest do
   test "each tile on a new board has not been selected" do
     Enum.each(Board.new().board, fn row ->
       Enum.each(row, fn tile ->
-        assert(tile.state == :unselected)
+        assert(Tile.is_unselected?(tile))
       end)
     end)
   end
@@ -54,11 +54,11 @@ defmodule BoardTest do
   test "returns a new board with the tile selected at the given location" do
     old_board = Board.new().board
 
-    assert(Board.get_tile(old_board, {1, 1}).state == :unselected)
+    assert(Board.get_tile(old_board, {1, 1}) |> Tile.is_unselected?())
 
     {:ok, new_board} = Board.select_tile(old_board, {1, 1})
 
-    assert(Board.get_tile(new_board, {1, 1}).state == :selected)
+    assert(Board.get_tile(new_board, {1, 1}) |> Tile.is_selected?())
   end
 
   test "takes a function that returns a new board and calls it for every tile in the board" do
@@ -66,7 +66,7 @@ defmodule BoardTest do
 
     all_tiles_are_unselected? =
       Board.all_tiles(old_board)
-      |> Enum.all?(fn tile -> tile.state == :unselected end)
+      |> Enum.all?(fn tile -> Tile.is_unselected?(tile) end)
 
     assert(all_tiles_are_unselected? == true)
 
@@ -74,7 +74,7 @@ defmodule BoardTest do
 
     all_tiles_are_selected? =
       Board.all_tiles(new_board)
-      |> Enum.all?(fn tile -> tile.state == :selected end)
+      |> Enum.all?(fn tile -> Tile.is_selected?(tile) end)
 
     assert(all_tiles_are_selected? == true)
   end

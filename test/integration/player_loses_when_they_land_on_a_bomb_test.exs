@@ -2,13 +2,27 @@ defmodule PlayerLosesWhenTheyLandOnABombTest do
   use ExUnit.Case
 
   import Mox
+  import MockRandomizerHelper
 
   setup :verify_on_exit!
 
   test "the player loses when they land on a bomb" do
+    first_row_coordinate_pairs = [
+      {0, 0},
+      {0, 1},
+      {0, 2},
+      {0, 3},
+      {0, 4},
+      {0, 5},
+      {0, 6},
+      {0, 7},
+      {0, 8},
+      {0, 9}
+    ]
+
     randomizer =
       MockRandomizer
-      |> allow_random_coordinate_pair_to_return_first_row()
+      |> allow_random_coordinate_pair_to_return(first_row_coordinate_pairs)
 
     tile_not_in_first_row = "4E"
     tile_in_first_row = "0A"
@@ -90,9 +104,5 @@ defmodule PlayerLosesWhenTheyLandOnABombTest do
     }
 
     assert_received {:write, "You lose!\n"}
-  end
-
-  defp allow_random_coordinate_pair_to_return_first_row(mock_randomizer) do
-    MockRandomizerHelper.allow_random_coordinate_pair_to_return(mock_randomizer)
   end
 end

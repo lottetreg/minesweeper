@@ -16,7 +16,7 @@ defmodule Tile do
     %{tile | state: :selected}
   end
 
-  def update_adjacent_bomb_count(tile, count) do
+  def set_adjacent_bomb_count(tile, count) do
     %{tile | adjacent_bomb_count: count}
   end
 
@@ -34,5 +34,9 @@ defmodule Tile do
 
   def is_selected?(tile) do
     tile.state == :selected
+  end
+
+  def is_unselected?(tile) do
+    tile.state == :unselected
   end
 end

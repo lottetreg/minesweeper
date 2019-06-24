@@ -2,13 +2,27 @@ defmodule PlayerWinsWhenTheySelectAllTheEmptyTilesTest do
   use ExUnit.Case
 
   import Mox
+  import MockRandomizerHelper
 
   setup :verify_on_exit!
 
   test "the player wins when they select all the empty tiles" do
+    first_row_coordinate_pairs = [
+      {0, 0},
+      {0, 1},
+      {0, 2},
+      {0, 3},
+      {0, 4},
+      {0, 5},
+      {0, 6},
+      {0, 7},
+      {0, 8},
+      {0, 9}
+    ]
+
     randomizer =
       MockRandomizer
-      |> allow_random_coordinate_pair_to_return_first_row()
+      |> allow_random_coordinate_pair_to_return(first_row_coordinate_pairs)
 
     reader =
       MockReader
@@ -29,10 +43,6 @@ defmodule PlayerWinsWhenTheySelectAllTheEmptyTilesTest do
     Game.play(game_state)
 
     assert_received {:write, "You win!\n"}
-  end
-
-  defp allow_random_coordinate_pair_to_return_first_row(mock_randomizer) do
-    MockRandomizerHelper.allow_random_coordinate_pair_to_return(mock_randomizer)
   end
 
   defp allow_user_to_select_all_but_first_row(mock_reader) do

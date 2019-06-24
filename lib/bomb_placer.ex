@@ -1,13 +1,14 @@
 defmodule BombPlacer do
-  @total_bomb_count 10
+  def place_bombs(board, randomizer, expected_bomb_count \\ 10) do
+    place_bombs(board, randomizer, expected_bomb_count, 0)
+  end
 
-  def place_bombs(board, randomizer, current_bomb_count \\ 0)
-
-  def place_bombs(board, _, @total_bomb_count) do
+  defp place_bombs(board, _, expected_bomb_count, bomb_count)
+       when bomb_count == expected_bomb_count do
     board
   end
 
-  def place_bombs(board, randomizer, _current_bomb_count) do
+  defp place_bombs(board, randomizer, expected_bomb_count, _current_bomb_count) do
     coordinates =
       randomizer.random_coordinate_pair(
         Board.row_count(board),
@@ -21,11 +22,17 @@ defmodule BombPlacer do
         board
       end
 
-    place_bombs(board, randomizer, current_bomb_count(board))
+    place_bombs(
+      board,
+      randomizer,
+      expected_bomb_count,
+      current_bomb_count(board)
+    )
   end
 
   defp tile_is_unselected?(board, coordinates) do
-    Board.get_tile(board, coordinates).state == :unselected
+    Board.get_tile(board, coordinates)
+    |> Tile.is_unselected?()
   end
 
   defp place_bomb(board, coordinate_pair) do
