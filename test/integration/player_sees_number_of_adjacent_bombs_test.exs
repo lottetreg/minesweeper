@@ -25,16 +25,15 @@ defmodule PlayerSeesNumberOfAdjacentBombsTest do
       |> allow_random_coordinate_pair_to_return(first_row_coordinate_pairs)
 
     location_of_empty_tile_with_two_adjacent_bombs = "1A"
-    location_of_bomb_tile = "0A"
 
     reader =
       MockReader
       |> expect(:read, fn -> location_of_empty_tile_with_two_adjacent_bombs end)
-      |> expect(:read, fn -> location_of_bomb_tile end)
+      |> expect(:read, fn -> Game.exit_command() end)
 
     writer =
       MockWriter
-      |> expect(:write, 4, fn string -> send(self(), {:write, string}) end)
+      |> expect(:write, 2, fn string -> send(self(), {:write, string}) end)
 
     game_state =
       GameState.new()
@@ -83,26 +82,5 @@ defmodule PlayerSeesNumberOfAdjacentBombsTest do
         ]
       ]
     }
-
-    assert_received {
-      :write,
-      [
-        "   A B C D E F G H I J\n",
-        [
-          "0 |*| | | | | | | | | |\n",
-          "1 |2| | | | | | | | | |\n",
-          "2 | | | | | | | | | | |\n",
-          "3 | | | | | | | | | | |\n",
-          "4 | | | | | | | | | | |\n",
-          "5 | | | | | | | | | | |\n",
-          "6 | | | | | | | | | | |\n",
-          "7 | | | | | | | | | | |\n",
-          "8 | | | | | | | | | | |\n",
-          "9 | | | | | | | | | | |\n"
-        ]
-      ]
-    }
-
-    assert_received {:write, "You lose!\n"}
   end
 end

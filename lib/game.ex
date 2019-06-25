@@ -1,37 +1,55 @@
 defmodule Game do
+  @exit_command "exit\n"
+
+  def exit_command do
+    @exit_command
+  end
+
   def play(%GameState{status: :awaiting_first_move} = game_state) do
     print_board(game_state.config.writer, game_state.board)
 
-    move = get_move(game_state.config.reader)
+    case get_input(game_state.config.reader) do
+      {:ok, input} ->
+        move = translate_input_to_move(input)
 
-    board =
-      Board.reveal_tile(game_state.board, move)
-      |> BombPlacer.place_bombs(game_state.config.randomizer)
-      |> AdjacentBombCount.set_adjacent_bomb_counts()
-      |> FloodFiller.flood_fill(move)
+        board =
+          Board.reveal_tile(game_state.board, move)
+          |> BombPlacer.place_bombs(game_state.config.randomizer)
+          |> AdjacentBombCount.set_adjacent_bomb_counts()
+          |> FloodFiller.flood_fill(move)
 
-    game_state
-    |> GameState.set_board(board)
-    |> GameState.set_status(:in_progress)
-    |> play()
+        game_state
+        |> GameState.set_board(board)
+        |> GameState.set_status(:in_progress)
+        |> play()
+
+      {:error, :exit} ->
+        nil
+    end
   end
 
   def play(%GameState{status: :in_progress} = game_state) do
     print_board(game_state.config.writer, game_state.board)
 
-    move = get_move(game_state.config.reader)
+    case get_input(game_state.config.reader) do
+      {:ok, input} ->
+        move = translate_input_to_move(input)
 
-    case Board.select_tile(game_state.board, move) do
-      {:ok, board} ->
-        game_state
-        |> GameState.set_board(board)
-        |> update_game_state_status()
-        |> play()
+        case Board.select_tile(game_state.board, move) do
+          {:ok, board} ->
+            game_state
+            |> GameState.set_board(board)
+            |> update_game_state_status()
+            |> play()
 
-      {:error, :already_selected} ->
-        message = "That tile has already been selected! Please try again.\n"
-        game_state.config.writer.write(message)
-        play(game_state)
+          {:error, :already_selected} ->
+            message = "That tile has already been selected! Please try again.\n"
+            game_state.config.writer.write(message)
+            play(game_state)
+        end
+
+      {:error, :exit} ->
+        nil
     end
   end
 
@@ -62,7 +80,20 @@ defmodule Game do
     writer.write(BoardPresenter.present(board))
   end
 
-  defp get_move(reader) do
-    Move.translate(reader.read)
+  defp get_input(reader) do
+    reader.read()
+    |> check_for_exit_command()
+  end
+
+  defp check_for_exit_command(input) do
+    if input == @exit_command do
+      {:error, :exit}
+    else
+      {:ok, input}
+    end
+  end
+
+  defp translate_input_to_move(input) do
+    Move.translate(input)
   end
 end
