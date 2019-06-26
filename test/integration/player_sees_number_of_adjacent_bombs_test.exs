@@ -31,7 +31,7 @@ defmodule PlayerSeesNumberOfAdjacentBombsTest do
       MockReader
       |> expect(:read, fn -> number_of_bombs end)
       |> expect(:read, fn -> location_of_empty_tile_with_two_adjacent_bombs end)
-      |> expect(:read, fn -> InputFilter.exit_command() end)
+      |> expect(:read, fn -> InputParser.exit_command() end)
 
     writer =
       MockWriter

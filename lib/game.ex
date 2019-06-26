@@ -1,26 +1,35 @@
 defmodule Game do
   def start(game_state) do
     case GameSetup.setup(game_state) do
-      :exit -> nil
+      {:exit, _} -> nil
       game_state -> play(game_state)
     end
   end
 
-  def play(%GameState{status: :awaiting_first_move} = game_state) do
+  defp play(%GameState{status: :awaiting_first_move} = game_state) do
     print_board(game_state.config.writer, game_state.board)
 
-    case get_input(game_state.config.reader) do
-      :exit ->
+    parsed_input =
+      game_state.config.reader.read()
+      |> InputParser.parse_turn()
+
+    case parsed_input do
+      {:exit, _} ->
         nil
 
-      input ->
-        move = translate_input_to_move(input)
+      {:flag, location} ->
+        {:ok, board} = Board.flag_or_unflag_tile(game_state.board, location)
 
+        game_state
+        |> GameState.set_board(board)
+        |> play()
+
+      {:move, location} ->
         board =
-          Board.reveal_tile(game_state.board, move)
+          Board.reveal_tile(game_state.board, location)
           |> BombPlacer.place_bombs(game_state.config.randomizer, game_state.number_of_bombs)
           |> AdjacentBombCount.set_adjacent_bomb_counts()
-          |> FloodFiller.flood_fill(move)
+          |> FloodFiller.flood_fill(location)
 
         game_state
         |> GameState.set_board(board)
@@ -30,17 +39,34 @@ defmodule Game do
     end
   end
 
-  def play(%GameState{status: :in_progress} = game_state) do
+  defp play(%GameState{status: :in_progress} = game_state) do
     print_board(game_state.config.writer, game_state.board)
 
-    case get_input(game_state.config.reader) do
-      :exit ->
+    parsed_input =
+      game_state.config.reader.read()
+      |> InputParser.parse_turn()
+
+    case parsed_input do
+      {:exit, _} ->
         nil
 
-      input ->
-        move = translate_input_to_move(input)
+      {:flag, location} ->
+        case Board.flag_or_unflag_tile(game_state.board, location) do
+          {:ok, board} ->
+            game_state
+            |> GameState.set_board(board)
+            |> play()
 
-        case Board.select_tile(game_state.board, move) do
+          {:error, :cannot_flag_revealed_tile} ->
+            "You can't flag a tile that has already been revealed!"
+            |> Message.format()
+            |> game_state.config.writer.write()
+
+            play(game_state)
+        end
+
+      {:move, location} ->
+        case Board.select_tile(game_state.board, location) do
           {:ok, board} ->
             game_state
             |> GameState.set_board(board)
@@ -57,14 +83,14 @@ defmodule Game do
     end
   end
 
-  def play(%GameState{status: :player_lost} = game_state) do
+  defp play(%GameState{status: :player_lost} = game_state) do
     print_board(game_state.config.writer, game_state.board)
 
     Message.format("You lose!")
     |> game_state.config.writer.write()
   end
 
-  def play(%GameState{status: :player_won} = game_state) do
+  defp play(%GameState{status: :player_won} = game_state) do
     print_board(game_state.config.writer, game_state.board)
 
     Message.format("You win!")
@@ -86,14 +112,5 @@ defmodule Game do
 
   defp print_board(writer, board) do
     writer.write(BoardPresenter.present(board))
-  end
-
-  defp get_input(reader) do
-    reader.read()
-    |> InputFilter.check_for_exit_command()
-  end
-
-  defp translate_input_to_move(input) do
-    Move.translate(input)
   end
 end

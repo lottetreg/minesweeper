@@ -21,12 +21,27 @@ defmodule Board do
   end
 
   def get_tile(board, {row_index, col_index}) do
-    if out_of_bounds?(board, {row_index, col_index}) do
-      nil
-    else
-      board
-      |> Enum.at(row_index)
-      |> Enum.at(col_index)
+    board
+    |> Enum.at(row_index)
+    |> Enum.at(col_index)
+  end
+
+  def flag_or_unflag_tile(board, coordinate_pair) do
+    tile = get_tile(board, coordinate_pair)
+
+    cond do
+      Tile.is_revealed?(tile) ->
+        {:error, :cannot_flag_revealed_tile}
+
+      Tile.is_flagged?(tile) ->
+        board = hide_tile(board, coordinate_pair)
+
+        {:ok, board}
+
+      !Tile.is_flagged?(tile) ->
+        board = flag_tile(board, coordinate_pair)
+
+        {:ok, board}
     end
   end
 
@@ -42,6 +57,16 @@ defmodule Board do
 
       {:ok, board}
     end
+  end
+
+  def flag_tile(board, coordinate_pair) do
+    tile = get_tile(board, coordinate_pair)
+    replace_tile(board, coordinate_pair, Tile.flag(tile))
+  end
+
+  def hide_tile(board, coordinate_pair) do
+    tile = get_tile(board, coordinate_pair)
+    replace_tile(board, coordinate_pair, Tile.hide(tile))
   end
 
   def reveal_tile(board, coordinate_pair) do
@@ -63,6 +88,11 @@ defmodule Board do
     end)
   end
 
+  def out_of_bounds?(board, {row_index, col_index}) do
+    row_out_of_bounds?(board, row_index) ||
+      col_out_of_bounds?(board, col_index)
+  end
+
   defp empty_board(row_count, col_count) do
     List.duplicate(empty_row(col_count), row_count)
   end
@@ -73,11 +103,6 @@ defmodule Board do
 
   defp empty_tile do
     Tile.new(:empty)
-  end
-
-  defp out_of_bounds?(board, {row_index, col_index}) do
-    row_out_of_bounds?(board, row_index) ||
-      col_out_of_bounds?(board, col_index)
   end
 
   defp row_out_of_bounds?(board, row_index) do

@@ -33,6 +33,30 @@ defmodule TileTest do
     assert(revealed_tile.state == :revealed)
   end
 
+  test "changes the state to flagged" do
+    tile = new_tile()
+
+    revealed_tile = Tile.flag(tile)
+
+    assert(revealed_tile.state == :flagged)
+  end
+
+  test "changes the state to hidden" do
+    tile = new_tile()
+
+    revealed_tile = Tile.hide(tile)
+
+    assert(revealed_tile.state == :hidden)
+  end
+
+  test "convert_to_bomb/1 changes the type to bomb" do
+    tile = Tile.new(:empty)
+
+    converted_to_bomb_tile = Tile.convert_to_bomb(tile)
+
+    assert(converted_to_bomb_tile.type == :bomb)
+  end
+
   test "updates the adjacent_bomb_count" do
     tile = new_tile()
 

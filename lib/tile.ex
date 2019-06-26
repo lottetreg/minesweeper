@@ -16,6 +16,18 @@ defmodule Tile do
     %{tile | state: :revealed}
   end
 
+  def flag(tile) do
+    %{tile | state: :flagged}
+  end
+
+  def hide(tile) do
+    %{tile | state: :hidden}
+  end
+
+  def convert_to_bomb(tile) do
+    %{tile | type: :bomb}
+  end
+
   def set_adjacent_bomb_count(tile, count) do
     %{tile | adjacent_bomb_count: count}
   end
@@ -38,5 +50,9 @@ defmodule Tile do
 
   def is_hidden?(tile) do
     tile.state == :hidden
+  end
+
+  def is_flagged?(tile) do
+    tile.state == :flagged
   end
 end
