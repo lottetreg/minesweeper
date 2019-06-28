@@ -11,7 +11,7 @@ defmodule FloodFiller do
   defp flood_fill(board, location, _adjacent_bomb_count) do
     board = Board.reveal_tile(board, location)
 
-    four_way_adjacent_tile_locations(board, location)
+    AdjacentTileLocations.cardinal_tile_locations(board, location)
     |> Enum.reduce(board, fn adjacent_tile_location, accumulated_board ->
       adjacent_tile = Board.get_tile(accumulated_board, adjacent_tile_location)
 
@@ -28,33 +28,6 @@ defmodule FloodFiller do
       else
         accumulated_board
       end
-    end)
-  end
-
-  defp four_way_adjacent_tile_locations(board, {orig_row_index, orig_col_index}) do
-    north_and_south_tile_locations =
-      adjacent_indices(orig_row_index, Board.row_count(board))
-      |> Enum.map(fn row_index ->
-        {row_index, orig_col_index}
-      end)
-
-    east_and_west_tile_locations =
-      adjacent_indices(orig_col_index, Board.col_count(board))
-      |> Enum.map(fn col_index ->
-        {orig_row_index, col_index}
-      end)
-
-    north_and_south_tile_locations ++ east_and_west_tile_locations
-  end
-
-  defp adjacent_indices(index, board_dimension) do
-    [index - 1, index + 1]
-    |> remove_indices_outside_of_boundaries(0, board_dimension)
-  end
-
-  defp remove_indices_outside_of_boundaries(indices, lower, upper) do
-    Enum.reject(indices, fn index ->
-      index < lower || index >= upper
     end)
   end
 end

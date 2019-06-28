@@ -41,6 +41,6 @@ defmodule BombPlacer do
 
   defp current_bomb_count(board) do
     Board.all_tiles(board)
-    |> Enum.count(fn tile -> Tile.is_bomb?(tile) end)
+    |> Enum.count(&Tile.is_bomb?/1)
   end
 end

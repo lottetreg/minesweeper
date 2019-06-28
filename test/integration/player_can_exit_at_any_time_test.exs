@@ -4,8 +4,8 @@ defmodule PlayerCanExitAtAnyTimeTest do
   import Mox
   import MockRandomizerHelper
 
-  test "the player can exit by entering 'exit' when asked for their first move" do
-    exit_command = "exit\n"
+  test "the player can exit by entering 'exit' when asked for the number of bombs" do
+    exit_command = "exit"
 
     reader =
       MockReader
@@ -23,7 +23,41 @@ defmodule PlayerCanExitAtAnyTimeTest do
         randomizer: Randomizer
       })
 
-    Game.play(game_state)
+    Game.start(game_state)
+
+    assert_received {
+      :write,
+      "Enter the number of mines to place on the board (1 to 99).\n"
+    }
+  end
+
+  test "the player can exit by entering 'exit' when asked for their first move" do
+    number_of_bombs = "1"
+    exit_command = "exit"
+
+    reader =
+      MockReader
+      |> expect(:read, fn -> number_of_bombs end)
+      |> expect(:read, fn -> exit_command end)
+
+    writer =
+      MockWriter
+      |> expect(:write, 2, fn string -> send(self(), {:write, string}) end)
+
+    game_state =
+      GameState.new()
+      |> GameState.set_config(%{
+        reader: reader,
+        writer: writer,
+        randomizer: Randomizer
+      })
+
+    Game.start(game_state)
+
+    assert_received {
+      :write,
+      "Enter the number of mines to place on the board (1 to 99).\n"
+    }
 
     assert_received {
       :write,
@@ -46,8 +80,9 @@ defmodule PlayerCanExitAtAnyTimeTest do
   end
 
   test "the player can exit by entering 'exit' when asked for a subsequent move" do
+    number_of_bombs = "10"
     first_move = "0A"
-    exit_command = "exit\n"
+    exit_command = "exit"
 
     bomb_locations = [
       {4, 0},
@@ -68,12 +103,13 @@ defmodule PlayerCanExitAtAnyTimeTest do
 
     reader =
       MockReader
+      |> expect(:read, fn -> number_of_bombs end)
       |> expect(:read, fn -> first_move end)
       |> expect(:read, fn -> exit_command end)
 
     writer =
       MockWriter
-      |> expect(:write, 2, fn string -> send(self(), {:write, string}) end)
+      |> expect(:write, 3, fn string -> send(self(), {:write, string}) end)
 
     game_state =
       GameState.new()
@@ -83,7 +119,12 @@ defmodule PlayerCanExitAtAnyTimeTest do
         randomizer: randomizer
       })
 
-    Game.play(game_state)
+    Game.start(game_state)
+
+    assert_received {
+      :write,
+      "Enter the number of mines to place on the board (1 to 99).\n"
+    }
 
     assert_received {
       :write,

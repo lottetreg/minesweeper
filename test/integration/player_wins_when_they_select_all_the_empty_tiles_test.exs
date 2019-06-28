@@ -24,17 +24,19 @@ defmodule PlayerWinsWhenTheySelectAllTheEmptyTilesTest do
       MockRandomizer
       |> allow_random_coordinate_pair_to_return(horizontal_coordinate_pairs)
 
-    first_empty_tile_location = "0A"
-    second_empty_tile_location = "9J"
+    number_of_bombs = "10"
+    first_move = "0A"
+    second_move = "9J"
 
     reader =
       MockReader
-      |> expect(:read, fn -> first_empty_tile_location end)
-      |> expect(:read, fn -> second_empty_tile_location end)
+      |> expect(:read, fn -> number_of_bombs end)
+      |> expect(:read, fn -> first_move end)
+      |> expect(:read, fn -> second_move end)
 
     writer =
       MockWriter
-      |> expect(:write, 4, fn string -> send(self(), {:write, string}) end)
+      |> expect(:write, 5, fn string -> send(self(), {:write, string}) end)
 
     game_state =
       GameState.new()
@@ -44,7 +46,12 @@ defmodule PlayerWinsWhenTheySelectAllTheEmptyTilesTest do
         randomizer: randomizer
       })
 
-    Game.play(game_state)
+    Game.start(game_state)
+
+    assert_received {
+      :write,
+      "Enter the number of mines to place on the board (1 to 99).\n"
+    }
 
     assert_received {
       :write,

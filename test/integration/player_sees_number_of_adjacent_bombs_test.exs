@@ -24,16 +24,18 @@ defmodule PlayerSeesNumberOfAdjacentBombsTest do
       MockRandomizer
       |> allow_random_coordinate_pair_to_return(first_row_coordinate_pairs)
 
+    number_of_bombs = "10"
     location_of_empty_tile_with_two_adjacent_bombs = "1A"
 
     reader =
       MockReader
+      |> expect(:read, fn -> number_of_bombs end)
       |> expect(:read, fn -> location_of_empty_tile_with_two_adjacent_bombs end)
-      |> expect(:read, fn -> Game.exit_command() end)
+      |> expect(:read, fn -> InputFilter.exit_command() end)
 
     writer =
       MockWriter
-      |> expect(:write, 2, fn string -> send(self(), {:write, string}) end)
+      |> expect(:write, 3, fn string -> send(self(), {:write, string}) end)
 
     game_state =
       GameState.new()
@@ -43,7 +45,12 @@ defmodule PlayerSeesNumberOfAdjacentBombsTest do
         randomizer: randomizer
       })
 
-    Game.play(game_state)
+    Game.start(game_state)
+
+    assert_received {
+      :write,
+      "Enter the number of mines to place on the board (1 to 99).\n"
+    }
 
     assert_received {
       :write,
