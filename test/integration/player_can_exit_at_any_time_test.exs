@@ -1,29 +1,11 @@
 defmodule PlayerCanExitAtAnyTimeTest do
   use ExUnit.Case
 
-  import Mox
-  import MockRandomizerHelper
+  import IntegrationTestHelper
 
   test "the player can exit by entering 'exit' when asked for the number of bombs" do
-    exit_command = "exit"
-
-    reader =
-      MockReader
-      |> expect(:read, fn -> exit_command end)
-
-    writer =
-      MockWriter
-      |> expect(:write, 1, fn string -> send(self(), {:write, string}) end)
-
-    game_state =
-      GameState.new()
-      |> GameState.set_config(%{
-        reader: reader,
-        writer: writer,
-        randomizer: Randomizer
-      })
-
-    Game.start(game_state)
+    new_game_state(number_of_bombs: "exit")
+    |> Game.start()
 
     assert_received {
       :write,
@@ -32,27 +14,11 @@ defmodule PlayerCanExitAtAnyTimeTest do
   end
 
   test "the player can exit by entering 'exit' when asked for their first move" do
-    number_of_bombs = "1"
-    exit_command = "exit"
-
-    reader =
-      MockReader
-      |> expect(:read, fn -> number_of_bombs end)
-      |> expect(:read, fn -> exit_command end)
-
-    writer =
-      MockWriter
-      |> expect(:write, 2, fn string -> send(self(), {:write, string}) end)
-
-    game_state =
-      GameState.new()
-      |> GameState.set_config(%{
-        reader: reader,
-        writer: writer,
-        randomizer: Randomizer
-      })
-
-    Game.start(game_state)
+    new_game_state(
+      number_of_bombs: "1",
+      moves: ["exit"]
+    )
+    |> Game.start()
 
     assert_received {
       :write,
@@ -80,46 +46,12 @@ defmodule PlayerCanExitAtAnyTimeTest do
   end
 
   test "the player can exit by entering 'exit' when asked for a subsequent move" do
-    number_of_bombs = "10"
-    first_move = "0A"
-    exit_command = "exit"
-
-    bomb_locations = [
-      {4, 0},
-      {4, 1},
-      {4, 2},
-      {4, 3},
-      {4, 4},
-      {4, 5},
-      {4, 6},
-      {4, 7},
-      {4, 8},
-      {4, 9}
-    ]
-
-    randomizer =
-      MockRandomizer
-      |> allow_random_coordinate_pair_to_return(bomb_locations)
-
-    reader =
-      MockReader
-      |> expect(:read, fn -> number_of_bombs end)
-      |> expect(:read, fn -> first_move end)
-      |> expect(:read, fn -> exit_command end)
-
-    writer =
-      MockWriter
-      |> expect(:write, 3, fn string -> send(self(), {:write, string}) end)
-
-    game_state =
-      GameState.new()
-      |> GameState.set_config(%{
-        reader: reader,
-        writer: writer,
-        randomizer: randomizer
-      })
-
-    Game.start(game_state)
+    new_game_state(
+      number_of_bombs: "1",
+      bomb_locations: [{0, 0}],
+      moves: ["0B", "exit"]
+    )
+    |> Game.start()
 
     assert_received {
       :write,
@@ -150,10 +82,10 @@ defmodule PlayerCanExitAtAnyTimeTest do
       [
         "   A B C D E F G H I J\n",
         [
-          "0 |0|0|0|0|0|0|0|0|0|0|\n",
-          "1 |0|0|0|0|0|0|0|0|0|0|\n",
-          "2 |0|0|0|0|0|0|0|0|0|0|\n",
-          "3 |2|3|3|3|3|3|3|3|3|2|\n",
+          "0 | |1| | | | | | | | |\n",
+          "1 | | | | | | | | | | |\n",
+          "2 | | | | | | | | | | |\n",
+          "3 | | | | | | | | | | |\n",
           "4 | | | | | | | | | | |\n",
           "5 | | | | | | | | | | |\n",
           "6 | | | | | | | | | | |\n",

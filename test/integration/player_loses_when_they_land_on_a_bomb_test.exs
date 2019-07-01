@@ -1,13 +1,10 @@
 defmodule PlayerLosesWhenTheyLandOnABombTest do
   use ExUnit.Case
 
-  import Mox
-  import MockRandomizerHelper
-
-  setup :verify_on_exit!
+  import IntegrationTestHelper
 
   test "the player loses when they land on a bomb" do
-    diagonal_coordinate_pairs = [
+    bomb_locations = [
       {0, 0},
       {1, 1},
       {2, 2},
@@ -20,33 +17,11 @@ defmodule PlayerLosesWhenTheyLandOnABombTest do
       {9, 9}
     ]
 
-    randomizer =
-      MockRandomizer
-      |> allow_random_coordinate_pair_to_return(diagonal_coordinate_pairs)
-
-    number_of_bombs = "10"
-    empty_tile_location = "6C"
-    bomb_tile_location = "1B"
-
-    reader =
-      MockReader
-      |> expect(:read, fn -> number_of_bombs end)
-      |> expect(:read, fn -> empty_tile_location end)
-      |> expect(:read, fn -> bomb_tile_location end)
-
-    writer =
-      MockWriter
-      |> expect(:write, 5, fn string -> send(self(), {:write, string}) end)
-
-    game_state =
-      GameState.new()
-      |> GameState.set_config(%{
-        reader: reader,
-        writer: writer,
-        randomizer: randomizer
-      })
-
-    Game.start(game_state)
+    new_game_state(
+      moves: ["6C", "1B"],
+      bomb_locations: bomb_locations
+    )
+    |> Game.start()
 
     assert_received {
       :write,

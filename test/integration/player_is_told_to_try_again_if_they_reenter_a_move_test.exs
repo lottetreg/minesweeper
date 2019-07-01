@@ -1,57 +1,15 @@
 defmodule PlayerIsToldToTryAgainIfTheyReenterAMoveTest do
   use ExUnit.Case
 
-  import Mox
-  import MockRandomizerHelper
-
-  setup :verify_on_exit!
+  import IntegrationTestHelper
 
   test "the player is told to try again if they reenter a move" do
-    diagonal_coordinate_pairs = [
-      {0, 0},
-      {1, 1},
-      {2, 2},
-      {3, 3},
-      {4, 4},
-      {5, 5},
-      {6, 6},
-      {7, 7},
-      {8, 8},
-      {9, 9}
-    ]
-
-    randomizer =
-      MockRandomizer
-      |> allow_random_coordinate_pair_to_return(diagonal_coordinate_pairs)
-
-    number_of_bombs = "10"
-    empty_tile_location = "6C"
-
-    reader =
-      MockReader
-      |> expect(:read, fn -> number_of_bombs end)
-      |> expect(:read, fn -> empty_tile_location end)
-      |> expect(:read, fn -> empty_tile_location end)
-      |> expect(:read, fn -> InputParser.exit_command() end)
-
-    writer =
-      MockWriter
-      |> expect(:write, 5, fn string -> send(self(), {:write, string}) end)
-
-    game_state =
-      GameState.new()
-      |> GameState.set_config(%{
-        reader: reader,
-        writer: writer,
-        randomizer: randomizer
-      })
-
-    Game.start(game_state)
-
-    assert_received {
-      :write,
-      "Enter the number of mines to place on the board (1 to 99).\n"
-    }
+    new_game_state(
+      number_of_bombs: "1",
+      bomb_locations: [{0, 0}],
+      moves: ["6C", "6C"]
+    )
+    |> Game.start()
 
     assert_received {
       :write,
@@ -77,16 +35,16 @@ defmodule PlayerIsToldToTryAgainIfTheyReenterAMoveTest do
       [
         "   A B C D E F G H I J\n",
         [
-          "0 | | | | | | | | | | |\n",
-          "1 | | | | | | | | | | |\n",
-          "2 |1| | | | | | | | | |\n",
-          "3 |0|1| | | | | | | | |\n",
-          "4 |0|0|1| | | | | | | |\n",
-          "5 |0|0|0|1| | | | | | |\n",
-          "6 |0|0|0|0|1| | | | | |\n",
-          "7 |0|0|0|0|0|1| | | | |\n",
-          "8 |0|0|0|0|0|0|1| | | |\n",
-          "9 |0|0|0|0|0|0|0|1| | |\n"
+          "0 | |1|0|0|0|0|0|0|0|0|\n",
+          "1 |1|1|0|0|0|0|0|0|0|0|\n",
+          "2 |0|0|0|0|0|0|0|0|0|0|\n",
+          "3 |0|0|0|0|0|0|0|0|0|0|\n",
+          "4 |0|0|0|0|0|0|0|0|0|0|\n",
+          "5 |0|0|0|0|0|0|0|0|0|0|\n",
+          "6 |0|0|0|0|0|0|0|0|0|0|\n",
+          "7 |0|0|0|0|0|0|0|0|0|0|\n",
+          "8 |0|0|0|0|0|0|0|0|0|0|\n",
+          "9 |0|0|0|0|0|0|0|0|0|0|\n"
         ]
       ]
     }
@@ -98,16 +56,16 @@ defmodule PlayerIsToldToTryAgainIfTheyReenterAMoveTest do
       [
         "   A B C D E F G H I J\n",
         [
-          "0 | | | | | | | | | | |\n",
-          "1 | | | | | | | | | | |\n",
-          "2 |1| | | | | | | | | |\n",
-          "3 |0|1| | | | | | | | |\n",
-          "4 |0|0|1| | | | | | | |\n",
-          "5 |0|0|0|1| | | | | | |\n",
-          "6 |0|0|0|0|1| | | | | |\n",
-          "7 |0|0|0|0|0|1| | | | |\n",
-          "8 |0|0|0|0|0|0|1| | | |\n",
-          "9 |0|0|0|0|0|0|0|1| | |\n"
+          "0 | |1|0|0|0|0|0|0|0|0|\n",
+          "1 |1|1|0|0|0|0|0|0|0|0|\n",
+          "2 |0|0|0|0|0|0|0|0|0|0|\n",
+          "3 |0|0|0|0|0|0|0|0|0|0|\n",
+          "4 |0|0|0|0|0|0|0|0|0|0|\n",
+          "5 |0|0|0|0|0|0|0|0|0|0|\n",
+          "6 |0|0|0|0|0|0|0|0|0|0|\n",
+          "7 |0|0|0|0|0|0|0|0|0|0|\n",
+          "8 |0|0|0|0|0|0|0|0|0|0|\n",
+          "9 |0|0|0|0|0|0|0|0|0|0|\n"
         ]
       ]
     }
