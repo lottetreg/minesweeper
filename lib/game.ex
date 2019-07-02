@@ -85,7 +85,8 @@ defmodule Game do
   end
 
   defp play(%GameState{status: :player_lost} = game_state) do
-    print_board(game_state.config.writer, game_state.board)
+    FinalBoardPresenter.present(game_state.board)
+    |> game_state.config.writer.write()
 
     Message.format("You lose!")
     |> game_state.config.writer.write()

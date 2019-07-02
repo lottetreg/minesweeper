@@ -1,9 +1,9 @@
-defmodule PlayerLosesWhenTheyLandOnABombTest do
+defmodule PlayerSeesIncorrectFlagsAtEnd do
   use ExUnit.Case
 
   import IntegrationTestHelper
 
-  test "the player loses when they land on a bomb" do
+  test "the player sees which flags were incorrect when they lose the game" do
     bomb_locations = [
       {0, 0},
       {1, 1},
@@ -18,15 +18,10 @@ defmodule PlayerLosesWhenTheyLandOnABombTest do
     ]
 
     new_game_state(
-      moves: ["6C", "1B"],
-      bomb_locations: bomb_locations
+      bomb_locations: bomb_locations,
+      moves: ["6C", "0A -f", "1G -f", "1B"]
     )
     |> Game.start()
-
-    assert_received {
-      :write,
-      "Enter the number of mines to place on the board (1 to 99).\n"
-    }
 
     assert_received {
       :write,
@@ -71,8 +66,27 @@ defmodule PlayerLosesWhenTheyLandOnABombTest do
       [
         "   A B C D E F G H I J\n",
         [
-          "0 |*| | | | | | | | | |\n",
-          "1 | |*| | | | | | | | |\n",
+          "0 |F| | | | | | | | | |\n",
+          "1 | | | | | | |F| | | |\n",
+          "2 |1| | | | | | | | | |\n",
+          "3 |0|1| | | | | | | | |\n",
+          "4 |0|0|1| | | | | | | |\n",
+          "5 |0|0|0|1| | | | | | |\n",
+          "6 |0|0|0|0|1| | | | | |\n",
+          "7 |0|0|0|0|0|1| | | | |\n",
+          "8 |0|0|0|0|0|0|1| | | |\n",
+          "9 |0|0|0|0|0|0|0|1| | |\n"
+        ]
+      ]
+    }
+
+    assert_received {
+      :write,
+      [
+        "   A B C D E F G H I J\n",
+        [
+          "0 |F| | | | | | | | | |\n",
+          "1 | |*| | | | |X| | | |\n",
           "2 |1| |*| | | | | | | |\n",
           "3 |0|1| |*| | | | | | |\n",
           "4 |0|0|1| |*| | | | | |\n",
