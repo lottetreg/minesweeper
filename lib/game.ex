@@ -39,10 +39,7 @@ defmodule Game do
 
       {:error, :missing_number_and_letter} ->
         "Please provide a correctly-formatted number and letter (e.g. 1A)"
-        |> Message.format()
-        |> game_state.config.writer.write()
-
-        play(game_state)
+        |> try_again_with_message(game_state)
     end
   end
 
@@ -67,10 +64,7 @@ defmodule Game do
 
           {:error, :cannot_flag_revealed_tile} ->
             "You can't flag a tile that has already been revealed!"
-            |> Message.format()
-            |> game_state.config.writer.write()
-
-            play(game_state)
+            |> try_again_with_message(game_state)
         end
 
       {:move, location} ->
@@ -83,18 +77,12 @@ defmodule Game do
 
           {:error, :already_selected} ->
             "That tile has already been selected! Please try again."
-            |> Message.format()
-            |> game_state.config.writer.write()
-
-            play(game_state)
+            |> try_again_with_message(game_state)
         end
 
       {:error, :missing_number_and_letter} ->
         "Please provide a correctly-formatted number and letter (e.g. 1A)"
-        |> Message.format()
-        |> game_state.config.writer.write()
-
-        play(game_state)
+        |> try_again_with_message(game_state)
     end
   end
 
@@ -124,6 +112,13 @@ defmodule Game do
       true ->
         game_state
     end
+  end
+
+  defp try_again_with_message(message, game_state) do
+    Message.format(message)
+    |> game_state.config.writer.write()
+
+    play(game_state)
   end
 
   defp print_board(writer, board) do
