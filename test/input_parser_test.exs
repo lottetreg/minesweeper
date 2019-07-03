@@ -32,15 +32,15 @@ defmodule InputParserTest do
     assert(InputParser.parse_turn("-f something 3A") == {:flag, {3, 0}})
   end
 
-  test "parse_turn/1 returns {:error, :missing_letter_and_number} if the letter and number are missing" do
-    assert(InputParser.parse_turn("") == {:error, :missing_letter_and_number})
-    assert(InputParser.parse_turn(" ") == {:error, :missing_letter_and_number})
-    assert(InputParser.parse_turn("3 A") == {:error, :missing_letter_and_number})
-    assert(InputParser.parse_turn("3") == {:error, :missing_letter_and_number})
-    assert(InputParser.parse_turn("A") == {:error, :missing_letter_and_number})
-    assert(InputParser.parse_turn("A3") == {:error, :missing_letter_and_number})
-    assert(InputParser.parse_turn("3AA") == {:error, :missing_letter_and_number})
-    assert(InputParser.parse_turn("-f") == {:error, :missing_letter_and_number})
+  test "parse_turn/1 returns {:error, :missing_number_and_letter} if the letter and number are missing" do
+    assert(InputParser.parse_turn("") == {:error, :missing_number_and_letter})
+    assert(InputParser.parse_turn(" ") == {:error, :missing_number_and_letter})
+    assert(InputParser.parse_turn("3 A") == {:error, :missing_number_and_letter})
+    assert(InputParser.parse_turn("3") == {:error, :missing_number_and_letter})
+    assert(InputParser.parse_turn("A") == {:error, :missing_number_and_letter})
+    assert(InputParser.parse_turn("A3") == {:error, :missing_number_and_letter})
+    assert(InputParser.parse_turn("3AA") == {:error, :missing_number_and_letter})
+    assert(InputParser.parse_turn("-f") == {:error, :missing_number_and_letter})
   end
 
   test "parse_number/1 returns {:exit, 'exit'} if the input is 'exit'" do

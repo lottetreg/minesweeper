@@ -36,6 +36,13 @@ defmodule Game do
         |> GameState.set_status(:in_progress)
         |> check_for_win_or_loss()
         |> play()
+
+      {:error, :missing_number_and_letter} ->
+        "Please provide a correctly-formatted number and letter (e.g. 1A)"
+        |> Message.format()
+        |> game_state.config.writer.write()
+
+        play(game_state)
     end
   end
 
@@ -81,6 +88,13 @@ defmodule Game do
 
             play(game_state)
         end
+
+      {:error, :missing_number_and_letter} ->
+        "Please provide a correctly-formatted number and letter (e.g. 1A)"
+        |> Message.format()
+        |> game_state.config.writer.write()
+
+        play(game_state)
     end
   end
 

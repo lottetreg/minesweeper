@@ -31,7 +31,7 @@ defmodule InputParser do
         {:move, input}
 
       true ->
-        {:error, :missing_letter_and_number}
+        {:error, :missing_number_and_letter}
     end
   end
 
