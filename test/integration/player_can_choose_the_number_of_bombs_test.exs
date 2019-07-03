@@ -3,6 +3,26 @@ defmodule PlayerCanChooseTheNumberOfBombsTest do
 
   import IntegrationTestHelper
 
+  test "the player can try again if they enter a non-digit" do
+    new_game_state(number_of_bombs: "2A")
+    |> Game.start()
+
+    assert_received {
+      :write,
+      "Enter the number of mines to place on the board (1 to 99).\n"
+    }
+
+    assert_received {
+      :write,
+      "Please enter a number (1 to 99).\n"
+    }
+
+    assert_received {
+      :write,
+      "Enter the number of mines to place on the board (1 to 99).\n"
+    }
+  end
+
   test "the player tries to place fewer than 1 bomb on the board" do
     new_game_state(number_of_bombs: "0")
     |> Game.start()

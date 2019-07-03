@@ -11,7 +11,7 @@ defmodule Game do
 
     parsed_input =
       game_state.config.reader.read()
-      |> InputParser.parse_turn()
+      |> InputParser.parse_input()
 
     case parsed_input do
       {:exit, _} ->
@@ -37,7 +37,7 @@ defmodule Game do
         |> check_for_win_or_loss()
         |> play()
 
-      {:error, :missing_number_and_letter} ->
+      _ ->
         "Please provide a correctly-formatted number and letter (e.g. 1A)"
         |> try_again_with_message(game_state)
     end
@@ -48,7 +48,7 @@ defmodule Game do
 
     parsed_input =
       game_state.config.reader.read()
-      |> InputParser.parse_turn()
+      |> InputParser.parse_input()
 
     case parsed_input do
       {:exit, _} ->
@@ -80,7 +80,7 @@ defmodule Game do
             |> try_again_with_message(game_state)
         end
 
-      {:error, :missing_number_and_letter} ->
+      _ ->
         "Please provide a correctly-formatted number and letter (e.g. 1A)"
         |> try_again_with_message(game_state)
     end

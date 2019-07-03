@@ -9,14 +9,14 @@ defmodule GameSetup do
 
     parsed_input =
       game_state.config.reader.read()
-      |> InputParser.parse_number()
+      |> InputParser.parse_input()
 
     case parsed_input do
       {:exit, input} ->
         {:exit, input}
 
-      {:number, input} ->
-        case validate_number_of_bombs(input) do
+      {:number, number} ->
+        case validate_number_of_bombs(number) do
           {:ok, number_of_bombs} ->
             GameState.set_number_of_bombs(game_state, number_of_bombs)
 
@@ -26,14 +26,18 @@ defmodule GameSetup do
 
             setup(game_state)
         end
+
+      _ ->
+        Message.format("Please enter a number (1 to 99).")
+        |> game_state.config.writer.write()
+
+        setup(game_state)
     end
   end
 
-  defp validate_number_of_bombs(input) do
-    number_of_bombs = String.to_integer(input)
-
-    if valid_number_of_bombs?(number_of_bombs) do
-      {:ok, number_of_bombs}
+  defp validate_number_of_bombs(number) do
+    if valid_number_of_bombs?(number) do
+      {:ok, number}
     else
       {:error, :invalid_number_of_bombs}
     end
