@@ -18,11 +18,16 @@ defmodule Game do
         nil
 
       {:flag, location} ->
-        {:ok, board} = Board.flag_or_unflag_tile(game_state.board, location)
+        case Board.flag_or_unflag_tile(game_state.board, location) do
+          {:ok, board} ->
+            game_state
+            |> GameState.set_board(board)
+            |> play()
 
-        game_state
-        |> GameState.set_board(board)
-        |> play()
+          {:error, :out_of_bounds} ->
+            "That move is out of bounds. Please enter a valid location."
+            |> try_again_with_message(game_state)
+        end
 
       {:move, location} ->
         board =
