@@ -20,15 +20,37 @@ defmodule Board do
     List.flatten(board)
   end
 
+  # remove
   def get_tile(board, {row_index, col_index}) do
     board
     |> Enum.at(row_index)
     |> Enum.at(col_index)
   end
 
-  def flag_or_unflag_tile(board, coordinate_pair) do
-    tile = get_tile(board, coordinate_pair)
+  def new_get_tile(board, {row_index, col_index}) do
+    if out_of_bounds?(board, {row_index, col_index}) do
+      {:error, :out_of_bounds}
+    else
+      tile =
+        board
+        |> Enum.at(row_index)
+        |> Enum.at(col_index)
 
+      {:ok, tile}
+    end
+  end
+
+  def flag_or_unflag_tile(board, coordinate_pair) do
+    with {:ok, tile} <- new_get_tile(board, coordinate_pair),
+         do: flag_or_unflag_tile(board, tile, coordinate_pair)
+  end
+
+  def select_tile(board, coordinate_pair) do
+    with {:ok, tile} <- new_get_tile(board, coordinate_pair),
+         do: select_tile(board, tile, coordinate_pair)
+  end
+
+  defp flag_or_unflag_tile(board, tile, coordinate_pair) do
     cond do
       Tile.is_revealed?(tile) ->
         {:error, :cannot_flag_revealed_tile}
@@ -45,9 +67,7 @@ defmodule Board do
     end
   end
 
-  def select_tile(board, coordinate_pair) do
-    tile = get_tile(board, coordinate_pair)
-
+  defp select_tile(board, tile, coordinate_pair) do
     if Tile.is_revealed?(tile) do
       {:error, :already_selected}
     else
@@ -59,6 +79,7 @@ defmodule Board do
     end
   end
 
+  # uggghhh want to have coordinates ON tiles
   def flag_tile(board, coordinate_pair) do
     tile = get_tile(board, coordinate_pair)
     replace_tile(board, coordinate_pair, Tile.flag(tile))

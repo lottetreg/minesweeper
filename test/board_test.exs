@@ -41,6 +41,22 @@ defmodule BoardTest do
     assert(tile == board |> Enum.at(0) |> Enum.at(0))
   end
 
+  test "new_get_tile/2 returns a tuple with a tile at a given location" do
+    board = Board.new(10, 10).board
+
+    {:ok, tile} = Board.new_get_tile(board, {0, 0})
+
+    assert(tile == board |> Enum.at(0) |> Enum.at(0))
+  end
+
+  test "new_get_tile/2 returns a tuple with an error if the location is out of bounds" do
+    board = Board.new(10, 10).board
+
+    response = Board.new_get_tile(board, {10, 10})
+
+    assert(response == {:error, :out_of_bounds})
+  end
+
   test "out_of_bounds?/2 returns false if the given location is not on the board" do
     board = Board.new().board
 

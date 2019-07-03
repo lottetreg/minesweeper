@@ -37,6 +37,7 @@ defmodule Game do
         |> check_for_win_or_loss()
         |> play()
 
+      # explicit with 'when'?
       _ ->
         "Please provide a correctly-formatted number and letter (e.g. 1A)"
         |> try_again_with_message(game_state)
@@ -75,11 +76,16 @@ defmodule Game do
             |> check_for_win_or_loss()
             |> play()
 
+          {:error, :out_of_bounds} ->
+            "That move is out of bounds. Please enter a valid location."
+            |> try_again_with_message(game_state)
+
           {:error, :already_selected} ->
             "That tile has already been selected! Please try again."
             |> try_again_with_message(game_state)
         end
 
+      # explicit with 'when'?
       _ ->
         "Please provide a correctly-formatted number and letter (e.g. 1A)"
         |> try_again_with_message(game_state)
