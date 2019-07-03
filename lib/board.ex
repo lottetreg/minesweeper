@@ -50,6 +50,11 @@ defmodule Board do
          do: select_tile(board, tile, coordinate_pair)
   end
 
+  def select_tile_with_floodfill(board, coordinate_pair) do
+    with {:ok, tile} <- new_get_tile(board, coordinate_pair),
+         do: select_tile_with_floodfill(board, tile, coordinate_pair)
+  end
+
   defp flag_or_unflag_tile(board, tile, coordinate_pair) do
     cond do
       Tile.is_revealed?(tile) ->
@@ -68,6 +73,16 @@ defmodule Board do
   end
 
   defp select_tile(board, tile, coordinate_pair) do
+    if Tile.is_revealed?(tile) do
+      {:error, :already_selected}
+    else
+      board = reveal_tile(board, coordinate_pair)
+
+      {:ok, board}
+    end
+  end
+
+  defp select_tile_with_floodfill(board, tile, coordinate_pair) do
     if Tile.is_revealed?(tile) do
       {:error, :already_selected}
     else

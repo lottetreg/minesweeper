@@ -30,17 +30,24 @@ defmodule Game do
         end
 
       {:move, location} ->
-        board =
-          Board.reveal_tile(game_state.board, location)
-          |> BombPlacer.place_bombs(game_state.config.randomizer, game_state.number_of_bombs)
-          |> AdjacentBombCount.set_adjacent_bomb_counts()
-          |> FloodFiller.flood_fill(location)
+        case Board.select_tile(game_state.board, location) do
+          {:ok, board} ->
+            board =
+              board
+              |> BombPlacer.place_bombs(game_state.config.randomizer, game_state.number_of_bombs)
+              |> AdjacentBombCount.set_adjacent_bomb_counts()
+              |> FloodFiller.flood_fill(location)
 
-        game_state
-        |> GameState.set_board(board)
-        |> GameState.set_status(:in_progress)
-        |> check_for_win_or_loss()
-        |> play()
+            game_state
+            |> GameState.set_board(board)
+            |> GameState.set_status(:in_progress)
+            |> check_for_win_or_loss()
+            |> play()
+
+          {:error, :out_of_bounds} ->
+            "That move is out of bounds. Please enter a valid location."
+            |> try_again_with_message(game_state)
+        end
 
       # explicit with 'when'?
       _ ->
@@ -78,7 +85,7 @@ defmodule Game do
         end
 
       {:move, location} ->
-        case Board.select_tile(game_state.board, location) do
+        case Board.select_tile_with_floodfill(game_state.board, location) do
           {:ok, board} ->
             game_state
             |> GameState.set_board(board)
@@ -140,3 +147,73 @@ defmodule Game do
     writer.write(BoardPresenter.present(board))
   end
 end
+
+{:write,
+ [
+   "   A B C D E F G H I J\n",
+   [
+     "0 |0|0|0|0|0|0|0|0|0|0|\n",
+     "1 |0|0|0|0|0|0|0|0|0|0|\n",
+     "2 |0|0|0|0|0|0|0|0|0|0|\n",
+     "3 |2|3|3|3|3|3|3|3|3|2|\n",
+     "4 | | | | | | | | | | |\n",
+     "5 | | | | | | | | | | |\n",
+     "6 | | | | | | | | | | |\n",
+     "7 | | | | | | | | | | |\n",
+     "8 | | | | | | | | | | |\n",
+     "9 | | | | | | | | | | |\n"
+   ]
+ ]}
+
+{:write, "Enter the number of mines to place on the board (1 to 99).\n"}
+
+{:write,
+ [
+   "   A B C D E F G H I J\n",
+   [
+     "0 | | | | | | | | | | |\n",
+     "1 | | | | | | | | | | |\n",
+     "2 | | | | | | | | | | |\n",
+     "3 | | | | | | | | | | |\n",
+     "4 | | | | | | | | | | |\n",
+     "5 | | | | | | | | | | |\n",
+     "6 | | | | | | | | | | |\n",
+     "7 | | | | | | | | | | |\n",
+     "8 | | | | | | | | | | |\n",
+     "9 | | | | | | | | | | |\n"
+   ]
+ ]}
+
+{:write,
+ [
+   "   A B C D E F G H I J\n",
+   [
+     "0 |0| | | | | | | | | |\n",
+     "1 | | | | | | | | | | |\n",
+     "2 | | | | | | | | | | |\n",
+     "3 | | | | | | | | | | |\n",
+     "4 | | | | | | | | | | |\n",
+     "5 | | | | | | | | | | |\n",
+     "6 | | | | | | | | | | |\n",
+     "7 | | | | | | | | | | |\n",
+     "8 | | | | | | | | | | |\n",
+     "9 | | | | | | | | | | |\n"
+   ]
+ ]}
+
+{:write,
+ [
+   "   A B C D E F G H I J\n",
+   [
+     "0 |0| | | | | | | | | |\n",
+     "1 | | | | | | | | | | |\n",
+     "2 | | | | | | | | | | |\n",
+     "3 | | | | | | | | | | |\n",
+     "4 | | | | |F| | | | | |\n",
+     "5 | | | | | | | | | | |\n",
+     "6 | | | | | | | | | | |\n",
+     "7 | | | | | | | | | | |\n",
+     "8 | | | | | | | | | | |\n",
+     "9 | | | | | | | | | | |\n"
+   ]
+ ]}
