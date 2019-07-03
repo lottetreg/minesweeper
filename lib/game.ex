@@ -63,6 +63,10 @@ defmodule Game do
             |> check_for_win_or_loss()
             |> play()
 
+          {:error, :out_of_bounds} ->
+            "That move is out of bounds. Please enter a valid location."
+            |> try_again_with_message(game_state)
+
           {:error, :cannot_flag_revealed_tile} ->
             "You can't flag a tile that has already been revealed!"
             |> try_again_with_message(game_state)
