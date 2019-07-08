@@ -55,6 +55,7 @@ defmodule Game do
           {:ok, board} ->
             game_state
             |> GameState.set_board(board)
+            |> check_for_win_or_loss()
             |> play()
 
           {:error, :cannot_flag_revealed_tile} ->

@@ -2,7 +2,6 @@ defmodule BombPlacerTest do
   use ExUnit.Case
 
   import Mox
-  import MockRandomizerHelper
 
   setup :verify_on_exit!
 
@@ -31,52 +30,37 @@ defmodule BombPlacerTest do
   end
 
   test "places bombs according to results of the Randomizer" do
-    bomb_locations = [
-      {0, 0},
-      {1, 1},
-      {2, 2},
-      {3, 3},
-      {4, 4},
-      {5, 5},
-      {6, 6},
-      {7, 7},
-      {8, 8},
-      {9, 9}
-    ]
-
     randomizer =
       MockRandomizer
-      |> allow_random_coordinate_pair_to_return(bomb_locations)
-
-    board_with_bombs =
-      Board.new().board
-      |> BombPlacer.place_bombs(randomizer)
-
-    Enum.each(bomb_locations, fn bomb_location ->
-      assert(Board.get_tile(board_with_bombs, bomb_location) |> Tile.is_bomb?())
-    end)
-  end
-
-  test "does not place bombs on selected tiles" do
-    selected_tile_location = {4, 4}
-    other_tile_location = {0, 0}
+      |> expect(:random_coordinate_pair, fn _, _ -> {0, 0} end)
 
     board =
       Board.new().board
-      |> Board.reveal_tile(selected_tile_location)
+      |> BombPlacer.place_bombs(randomizer, 1)
+
+    assert(Board.get_tile(board, {0, 0}) |> Tile.is_bomb?())
+  end
+
+  test "does not place bombs on revealed tiles" do
+    revealed_tile_location = {4, 4}
+    unrevealed_tile_location = {0, 0}
+
+    board =
+      Board.new().board
+      |> Board.reveal_tile(revealed_tile_location)
 
     randomizer =
       MockRandomizer
-      |> allow_random_coordinate_pair_to_return(selected_tile_location)
-      |> allow_random_coordinate_pair_to_return(other_tile_location)
+      |> expect(:random_coordinate_pair, fn _, _ -> revealed_tile_location end)
+      |> expect(:random_coordinate_pair, fn _, _ -> unrevealed_tile_location end)
 
     board = BombPlacer.place_bombs(board, randomizer, 1)
 
-    selected_tile = Board.get_tile(board, selected_tile_location)
-    other_tile = Board.get_tile(board, other_tile_location)
+    revealed_tile = Board.get_tile(board, revealed_tile_location)
+    unrevealed_tile = Board.get_tile(board, unrevealed_tile_location)
 
-    assert(Tile.is_empty?(selected_tile))
-    assert(Tile.is_bomb?(other_tile))
+    assert(Tile.is_empty?(revealed_tile))
+    assert(Tile.is_bomb?(unrevealed_tile))
   end
 
   test "will place bombs on flagged tiles" do
@@ -88,7 +72,7 @@ defmodule BombPlacerTest do
 
     randomizer =
       MockRandomizer
-      |> allow_random_coordinate_pair_to_return(flagged_tile_location)
+      |> expect(:random_coordinate_pair, fn _, _ -> flagged_tile_location end)
 
     board = BombPlacer.place_bombs(board, randomizer, 1)
 

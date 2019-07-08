@@ -1,52 +1,15 @@
 defmodule PlayerWinsWhenTheySelectAllTheEmptyTilesTest do
   use ExUnit.Case
 
-  import Mox
-  import MockRandomizerHelper
+  import IntegrationTestHelper
 
-  setup :verify_on_exit!
-
-  test "the player wins when all of the empty tiles have been revealed" do
-    horizontal_coordinate_pairs = [
-      {4, 0},
-      {4, 1},
-      {4, 2},
-      {4, 3},
-      {4, 4},
-      {4, 5},
-      {4, 6},
-      {4, 7},
-      {4, 8},
-      {4, 9}
-    ]
-
-    randomizer =
-      MockRandomizer
-      |> allow_random_coordinate_pair_to_return(horizontal_coordinate_pairs)
-
-    number_of_bombs = "10"
-    first_move = "0A"
-    second_move = "9J"
-
-    reader =
-      MockReader
-      |> expect(:read, fn -> number_of_bombs end)
-      |> expect(:read, fn -> first_move end)
-      |> expect(:read, fn -> second_move end)
-
-    writer =
-      MockWriter
-      |> expect(:write, 5, fn string -> send(self(), {:write, string}) end)
-
-    game_state =
-      GameState.new()
-      |> GameState.set_config(%{
-        reader: reader,
-        writer: writer,
-        randomizer: randomizer
-      })
-
-    Game.start(game_state)
+  test "the player wins when all of the bombs have been flagged and all of the empty tiles have been revealed" do
+    new_game_state(
+      number_of_bombs: "1",
+      bomb_locations: [{9, 9}],
+      moves: ["0A", "9J -f"]
+    )
+    |> Game.start()
 
     assert_received {
       :write,
@@ -80,13 +43,13 @@ defmodule PlayerWinsWhenTheySelectAllTheEmptyTilesTest do
           "0 |0|0|0|0|0|0|0|0|0|0|\n",
           "1 |0|0|0|0|0|0|0|0|0|0|\n",
           "2 |0|0|0|0|0|0|0|0|0|0|\n",
-          "3 |2|3|3|3|3|3|3|3|3|2|\n",
-          "4 | | | | | | | | | | |\n",
-          "5 | | | | | | | | | | |\n",
-          "6 | | | | | | | | | | |\n",
-          "7 | | | | | | | | | | |\n",
-          "8 | | | | | | | | | | |\n",
-          "9 | | | | | | | | | | |\n"
+          "3 |0|0|0|0|0|0|0|0|0|0|\n",
+          "4 |0|0|0|0|0|0|0|0|0|0|\n",
+          "5 |0|0|0|0|0|0|0|0|0|0|\n",
+          "6 |0|0|0|0|0|0|0|0|0|0|\n",
+          "7 |0|0|0|0|0|0|0|0|0|0|\n",
+          "8 |0|0|0|0|0|0|0|0|1|1|\n",
+          "9 |0|0|0|0|0|0|0|0|1| |\n"
         ]
       ]
     }
@@ -99,13 +62,13 @@ defmodule PlayerWinsWhenTheySelectAllTheEmptyTilesTest do
           "0 |0|0|0|0|0|0|0|0|0|0|\n",
           "1 |0|0|0|0|0|0|0|0|0|0|\n",
           "2 |0|0|0|0|0|0|0|0|0|0|\n",
-          "3 |2|3|3|3|3|3|3|3|3|2|\n",
-          "4 | | | | | | | | | | |\n",
-          "5 |2|3|3|3|3|3|3|3|3|2|\n",
+          "3 |0|0|0|0|0|0|0|0|0|0|\n",
+          "4 |0|0|0|0|0|0|0|0|0|0|\n",
+          "5 |0|0|0|0|0|0|0|0|0|0|\n",
           "6 |0|0|0|0|0|0|0|0|0|0|\n",
           "7 |0|0|0|0|0|0|0|0|0|0|\n",
-          "8 |0|0|0|0|0|0|0|0|0|0|\n",
-          "9 |0|0|0|0|0|0|0|0|0|0|\n"
+          "8 |0|0|0|0|0|0|0|0|1|1|\n",
+          "9 |0|0|0|0|0|0|0|0|1|F|\n"
         ]
       ]
     }

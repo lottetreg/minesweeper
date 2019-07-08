@@ -1,13 +1,10 @@
 defmodule PlayerSeesNumberOfAdjacentBombsTest do
   use ExUnit.Case
 
-  import Mox
-  import MockRandomizerHelper
-
-  setup :verify_on_exit!
+  import IntegrationTestHelper
 
   test "the player sees the number of adjacent bombs in a selected empty tile" do
-    first_row_coordinate_pairs = [
+    bomb_locations = [
       {0, 0},
       {0, 1},
       {0, 2},
@@ -20,37 +17,11 @@ defmodule PlayerSeesNumberOfAdjacentBombsTest do
       {0, 9}
     ]
 
-    randomizer =
-      MockRandomizer
-      |> allow_random_coordinate_pair_to_return(first_row_coordinate_pairs)
-
-    number_of_bombs = "10"
-    location_of_empty_tile_with_two_adjacent_bombs = "1A"
-
-    reader =
-      MockReader
-      |> expect(:read, fn -> number_of_bombs end)
-      |> expect(:read, fn -> location_of_empty_tile_with_two_adjacent_bombs end)
-      |> expect(:read, fn -> InputParser.exit_command() end)
-
-    writer =
-      MockWriter
-      |> expect(:write, 3, fn string -> send(self(), {:write, string}) end)
-
-    game_state =
-      GameState.new()
-      |> GameState.set_config(%{
-        reader: reader,
-        writer: writer,
-        randomizer: randomizer
-      })
-
-    Game.start(game_state)
-
-    assert_received {
-      :write,
-      "Enter the number of mines to place on the board (1 to 99).\n"
-    }
+    new_game_state(
+      moves: ["1A"],
+      bomb_locations: bomb_locations
+    )
+    |> Game.start()
 
     assert_received {
       :write,

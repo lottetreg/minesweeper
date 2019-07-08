@@ -28,23 +28,45 @@ defmodule GameRulesTest do
     assert(GameRules.player_lost?(board_with_empty_revealed) == false)
   end
 
-  test "the player has won if all the empty tiles have been revealed" do
+  test "the player has won if all the bomb tiles have been flagged and all the empty tiles have been revealed" do
     board =
       Board.new().board
-      |> place_a_bomb
+      |> BombPlacer.place_bombs(Randomizer)
+      |> Board.update_all_tiles(&reveal_if_empty/3)
+      |> Board.update_all_tiles(&flag_if_bomb/3)
 
-    board_with_empty_tiles_revealed = Board.update_all_tiles(board, &reveal_if_empty/3)
-
-    assert(GameRules.player_won?(board_with_empty_tiles_revealed) == true)
+    assert(GameRules.player_won?(board) == true)
   end
 
-  defp place_a_bomb(board) do
-    Board.replace_tile(board, {0, 0}, Tile.new(:bomb))
+  test "the player has not won if all the empty tiles have been not been revealed" do
+    board =
+      Board.new().board
+      |> BombPlacer.place_bombs(Randomizer)
+      |> Board.update_all_tiles(&flag_if_bomb/3)
+
+    assert(GameRules.player_won?(board) == false)
+  end
+
+  test "the player has not won if all the bomb tiles have been not been flagged" do
+    board =
+      Board.new().board
+      |> BombPlacer.place_bombs(Randomizer)
+      |> Board.update_all_tiles(&reveal_if_empty/3)
+
+    assert(GameRules.player_won?(board) == false)
   end
 
   defp reveal_if_empty(board, tile, tile_location) do
     if Tile.is_empty?(tile) do
       Board.reveal_tile(board, tile_location)
+    else
+      board
+    end
+  end
+
+  defp flag_if_bomb(board, tile, tile_location) do
+    if Tile.is_bomb?(tile) do
+      Board.flag_tile(board, tile_location)
     else
       board
     end
