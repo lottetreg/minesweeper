@@ -7,15 +7,15 @@ defmodule GameSetup do
     |> Message.format()
     |> game_state.config.writer.write()
 
-    input =
+    parsed_input =
       game_state.config.reader.read()
-      |> InputFilter.check_for_exit_command()
+      |> InputParser.parse_number()
 
-    case input do
-      :exit ->
-        :exit
+    case parsed_input do
+      {:exit, input} ->
+        {:exit, input}
 
-      input ->
+      {:number, input} ->
         case validate_number_of_bombs(input) do
           {:ok, number_of_bombs} ->
             GameState.set_number_of_bombs(game_state, number_of_bombs)

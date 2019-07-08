@@ -16,10 +16,10 @@ defmodule BombPlacer do
       )
 
     board =
-      if tile_is_hidden?(board, coordinates) do
-        place_bomb(board, coordinates)
-      else
+      if tile_is_revealed?(board, coordinates) do
         board
+      else
+        place_bomb(board, coordinates)
       end
 
     place_bombs(
@@ -30,13 +30,14 @@ defmodule BombPlacer do
     )
   end
 
-  defp tile_is_hidden?(board, coordinates) do
+  defp tile_is_revealed?(board, coordinates) do
     Board.get_tile(board, coordinates)
-    |> Tile.is_hidden?()
+    |> Tile.is_revealed?()
   end
 
   defp place_bomb(board, coordinate_pair) do
-    Board.replace_tile(board, coordinate_pair, Tile.new(:bomb))
+    tile = Board.get_tile(board, coordinate_pair)
+    Board.replace_tile(board, coordinate_pair, Tile.convert_to_bomb(tile))
   end
 
   defp current_bomb_count(board) do

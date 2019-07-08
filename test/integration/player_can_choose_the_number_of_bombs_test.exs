@@ -10,7 +10,7 @@ defmodule PlayerCanChooseTheNumberOfBombsTest do
     reader =
       MockReader
       |> expect(:read, fn -> number_of_bombs end)
-      |> expect(:read, fn -> InputFilter.exit_command() end)
+      |> expect(:read, fn -> InputParser.exit_command() end)
 
     writer =
       MockWriter
@@ -48,7 +48,7 @@ defmodule PlayerCanChooseTheNumberOfBombsTest do
     reader =
       MockReader
       |> expect(:read, fn -> number_of_bombs end)
-      |> expect(:read, fn -> InputFilter.exit_command() end)
+      |> expect(:read, fn -> InputParser.exit_command() end)
 
     writer =
       MockWriter

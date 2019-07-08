@@ -32,7 +32,7 @@ defmodule PlayerIsToldToTryAgainIfTheyReenterAMoveTest do
       |> expect(:read, fn -> number_of_bombs end)
       |> expect(:read, fn -> empty_tile_location end)
       |> expect(:read, fn -> empty_tile_location end)
-      |> expect(:read, fn -> InputFilter.exit_command() end)
+      |> expect(:read, fn -> InputParser.exit_command() end)
 
     writer =
       MockWriter

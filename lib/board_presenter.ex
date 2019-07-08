@@ -14,6 +14,10 @@ defmodule BoardPresenter do
     acc <> @blank_space
   end
 
+  defp present_tile(%Tile{state: :flagged}, acc) do
+    acc <> "F|"
+  end
+
   defp present_tile(%Tile{state: :revealed, type: :empty} = tile, acc) do
     acc <> Integer.to_string(tile.adjacent_bomb_count) <> "|"
   end

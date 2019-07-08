@@ -78,4 +78,22 @@ defmodule BombPlacerTest do
     assert(Tile.is_empty?(selected_tile))
     assert(Tile.is_bomb?(other_tile))
   end
+
+  test "will place bombs on flagged tiles" do
+    flagged_tile_location = {4, 4}
+
+    board =
+      Board.new().board
+      |> Board.flag_tile(flagged_tile_location)
+
+    randomizer =
+      MockRandomizer
+      |> allow_random_coordinate_pair_to_return(flagged_tile_location)
+
+    board = BombPlacer.place_bombs(board, randomizer, 1)
+
+    flagged_tile = Board.get_tile(board, flagged_tile_location)
+
+    assert(Tile.is_bomb?(flagged_tile))
+  end
 end
