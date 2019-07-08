@@ -274,9 +274,7 @@ defmodule NewBoardTest do
   test "takes a function that returns a new board and calls it for every tile in the board" do
     board = NewBoard.new().board
 
-    reveal_tile = &NewBoard.reveal_tile(&1, &2)
-
-    board = NewBoard.update_all_tiles(board, reveal_tile)
+    board = NewBoard.update_all_tiles(board, &NewBoard.reveal_tile(&1, &2))
 
     assert(Enum.all?(board, &Tile.is_revealed?/1) == true)
   end

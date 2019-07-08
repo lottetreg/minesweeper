@@ -30,14 +30,14 @@ end
 
 defmodule NewAdjacentBombCount do
   def set_adjacent_bomb_counts(board) do
-    Board.update_all_tiles(board, &set_adjacent_bomb_count/3)
+    NewBoard.update_all_tiles(board, &set_adjacent_bomb_count/2)
   end
 
-  defp set_adjacent_bomb_count(board, tile, tile_location) do
+  defp set_adjacent_bomb_count(board, tile) do
     adjacent_bomb_count = adjacent_bomb_count(board, tile)
     updated_tile = Tile.set_adjacent_bomb_count(tile, adjacent_bomb_count)
 
-    Board.replace_tile(board, tile_location, updated_tile)
+    NewBoard.replace_tile(board, tile, updated_tile)
   end
 
   defp adjacent_bomb_count(board, tile) do

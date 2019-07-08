@@ -163,14 +163,6 @@ defmodule NewBoard do
     }
   end
 
-  defp empty_board(row_count, col_count) do
-    Enum.reduce(0..(row_count - 1), [], fn row, list ->
-      Enum.reduce(0..(col_count - 1), list, fn col, list ->
-        list ++ [Tile.new(:empty, row: row, col: col)]
-      end)
-    end)
-  end
-
   def row_count(board) do
     Enum.uniq_by(board, & &1.row)
     |> Enum.count()
@@ -181,15 +173,13 @@ defmodule NewBoard do
     |> Enum.count()
   end
 
-  def flatten(board) do
-    List.flatten(board)
+  # remove
+  def all_tiles(board) do
+    board
   end
 
   def get_tile(board, {row, col}) do
-    tile =
-      Enum.find(board, fn tile ->
-        tile.row == row && tile.col == col
-      end)
+    tile = Enum.find(board, &(&1.row == row && &1.col == col))
 
     if tile do
       {:ok, tile}
@@ -253,18 +243,26 @@ defmodule NewBoard do
     replace_tile(board, tile, Tile.reveal(tile))
   end
 
-  def replace_tile(board, orig_tile, value) do
+  def replace_tile(board, orig_tile, replacement_tile) do
     tile_index =
       Enum.find_index(board, fn tile ->
         tile.row == orig_tile.row && tile.col == orig_tile.col
       end)
 
-    List.replace_at(board, tile_index, value)
+    List.replace_at(board, tile_index, replacement_tile)
   end
 
   def update_all_tiles(board, func) do
     Enum.reduce(board, board, fn tile, board ->
       func.(board, tile)
+    end)
+  end
+
+  defp empty_board(row_count, col_count) do
+    Enum.reduce(0..(row_count - 1), [], fn row, list ->
+      Enum.reduce(0..(col_count - 1), list, fn col, list ->
+        list ++ [Tile.new(:empty, row: row, col: col)]
+      end)
     end)
   end
 end
