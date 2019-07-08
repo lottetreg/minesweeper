@@ -1,11 +1,14 @@
 defmodule Tile do
-  defstruct [:type, :state, :adjacent_bomb_count]
+  defstruct [:row, :col, :type, :state, :adjacent_bomb_count]
 
-  def new(:empty), do: new_with_type(:empty)
-  def new(:bomb), do: new_with_type(:bomb)
+  def new(_, location \\ [row: nil, col: nil])
+  def new(:empty, location), do: new_with_type(:empty, location)
+  def new(:bomb, location), do: new_with_type(:bomb, location)
 
-  defp new_with_type(type) do
+  defp new_with_type(type, row: row, col: col) do
     %Tile{
+      row: row,
+      col: col,
       type: type,
       state: :hidden,
       adjacent_bomb_count: 0
