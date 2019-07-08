@@ -1,7 +1,8 @@
-defmodule BoardPresenter do
+defmodule FinalBoardPresenter do
   @blank_space " "
-  @flagged "F"
-  @revealed_bomb "*"
+  @flagged_empty "X"
+  @flagged_bomb "F"
+  @bomb "*"
   @border "|"
 
   def present(board) do
@@ -13,19 +14,23 @@ defmodule BoardPresenter do
     ["   A B C D E F G H I J\n", rows_with_numbers]
   end
 
-  defp present_tile(%Tile{state: :hidden}, acc) do
+  defp present_tile(%Tile{state: :hidden, type: :empty}, acc) do
     acc <> @blank_space <> @border
   end
 
-  defp present_tile(%Tile{state: :flagged}, acc) do
-    acc <> @flagged <> @border
+  defp present_tile(%Tile{state: :flagged, type: :empty}, acc) do
+    acc <> @flagged_empty <> @border
+  end
+
+  defp present_tile(%Tile{state: :flagged, type: :bomb}, acc) do
+    acc <> @flagged_bomb <> @border
   end
 
   defp present_tile(%Tile{state: :revealed, type: :empty} = tile, acc) do
     acc <> Integer.to_string(tile.adjacent_bomb_count) <> @border
   end
 
-  defp present_tile(%Tile{state: :revealed, type: :bomb}, acc) do
-    acc <> @revealed_bomb <> @border
+  defp present_tile(%Tile{type: :bomb}, acc) do
+    acc <> @bomb <> @border
   end
 end
