@@ -33,11 +33,13 @@ defmodule FloodFiller do
 end
 
 defmodule NewFloodFiller do
-  def flood_fill(board, tile) do
-    flood_fill(board, tile, tile.adjacent_bomb_count)
+  def flood_fill(board, location) do
+    with {:ok, tile} <- NewBoard.get_tile(board, location) do
+      flood_fill(board, tile, tile.adjacent_bomb_count)
+    end
   end
 
-  defp flood_fill(board, _, adjacent_bomb_count) when adjacent_bomb_count > 0 do
+  defp flood_fill(board, _tile, adjacent_bomb_count) when adjacent_bomb_count > 0 do
     board
   end
 

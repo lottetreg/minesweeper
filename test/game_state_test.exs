@@ -2,7 +2,7 @@ defmodule GameStateTest do
   use ExUnit.Case
 
   test "is initialized with a default new board" do
-    assert(GameState.new().board == Board.new().board)
+    assert(GameState.new().board == NewBoard.new().board)
   end
 
   test "is initialized with a default config" do

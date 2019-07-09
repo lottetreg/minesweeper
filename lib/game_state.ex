@@ -3,7 +3,7 @@ defmodule GameState do
 
   def new do
     %GameState{
-      board: Board.new().board,
+      board: NewBoard.new().board,
       config: default_config(),
       status: :awaiting_first_move,
       number_of_bombs: 1

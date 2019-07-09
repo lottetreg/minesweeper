@@ -205,7 +205,7 @@ defmodule NewBoard do
       else
         board =
           reveal_tile(board, tile)
-          |> NewFloodFiller.flood_fill(tile)
+          |> NewFloodFiller.flood_fill(location)
 
         {:ok, board}
       end
@@ -228,20 +228,25 @@ defmodule NewBoard do
     end
   end
 
-  # make private or remove?
+  # find tiles in these
   def flag_tile(board, tile) do
     replace_tile(board, tile, Tile.flag(tile))
   end
 
-  # make private or remove?
+  # find tiles in these
   def hide_tile(board, tile) do
     replace_tile(board, tile, Tile.hide(tile))
   end
 
-  # make private or remove?
+  # find tiles in these
   def reveal_tile(board, tile) do
     replace_tile(board, tile, Tile.reveal(tile))
   end
+
+  # def new_reveal_tile(board, location) do
+  #   {:ok, tile} = get_tile(board, location)
+  #   new_replace_tile(board, location, Tile.reveal(tile))
+  # end
 
   def replace_tile(board, orig_tile, replacement_tile) do
     tile_index =
@@ -251,6 +256,15 @@ defmodule NewBoard do
 
     List.replace_at(board, tile_index, replacement_tile)
   end
+
+  # def new_replace_tile(board, {row, col}, replacement_tile) do
+  #   tile_index =
+  #     Enum.find_index(board, fn tile ->
+  #       tile.row == row && tile.col == col
+  #     end)
+
+  #   List.replace_at(board, tile_index, replacement_tile)
+  # end
 
   def update_all_tiles(board, func) do
     Enum.reduce(board, board, fn tile, board ->

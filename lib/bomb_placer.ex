@@ -45,3 +45,50 @@ defmodule BombPlacer do
     |> Enum.count(&Tile.is_bomb?/1)
   end
 end
+
+defmodule NewBombPlacer do
+  def place_bombs(board, randomizer, expected_bomb_count \\ 10) do
+    place_bombs(board, randomizer, expected_bomb_count, 0)
+  end
+
+  defp place_bombs(board, _, expected_bomb_count, bomb_count)
+       when bomb_count == expected_bomb_count do
+    board
+  end
+
+  defp place_bombs(board, randomizer, expected_bomb_count, _current_bomb_count) do
+    location =
+      randomizer.random_coordinate_pair(
+        NewBoard.row_count(board),
+        NewBoard.col_count(board)
+      )
+
+    board =
+      if tile_is_revealed?(board, location) do
+        board
+      else
+        place_bomb(board, location)
+      end
+
+    place_bombs(
+      board,
+      randomizer,
+      expected_bomb_count,
+      current_bomb_count(board)
+    )
+  end
+
+  defp tile_is_revealed?(board, location) do
+    {:ok, tile} = NewBoard.get_tile(board, location)
+    Tile.is_revealed?(tile)
+  end
+
+  defp place_bomb(board, location) do
+    {:ok, tile} = NewBoard.get_tile(board, location)
+    NewBoard.replace_tile(board, tile, Tile.convert_to_bomb(tile))
+  end
+
+  defp current_bomb_count(board) do
+    Enum.count(board, &Tile.is_bomb?/1)
+  end
+end

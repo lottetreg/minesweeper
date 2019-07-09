@@ -115,11 +115,11 @@ defmodule NewFloodFillerTest do
   use ExUnit.Case
 
   test "all tiles with 0 adjacent bombs that are contiguous to the initial tile are revealed" do
-    board = NewBoard.new(3, 3).board
+    {:ok, board} =
+      NewBoard.new(3, 3).board
+      |> NewBoard.select_tile({0, 0})
 
-    {:ok, tile} = NewBoard.get_tile(board, {0, 0})
-
-    flood_filled_board = NewFloodFiller.flood_fill(board, tile)
+    flood_filled_board = NewFloodFiller.flood_fill(board, {0, 0})
 
     assert format(flood_filled_board) == [
              ["0", "0", "0"],
@@ -131,9 +131,7 @@ defmodule NewFloodFillerTest do
   test "all contiguous tiles with 0 adjacent bombs are revealed, even if the initial tile has not been revealed yet" do
     board = NewBoard.new(3, 3).board
 
-    {:ok, tile} = NewBoard.get_tile(board, {0, 0})
-
-    flood_filled_board = NewFloodFiller.flood_fill(board, tile)
+    flood_filled_board = NewFloodFiller.flood_fill(board, {0, 0})
 
     assert format(flood_filled_board) == [
              ["0", "0", "0"],
@@ -154,7 +152,7 @@ defmodule NewFloodFillerTest do
     flood_filled_board =
       with {:ok, tile} <- NewBoard.get_tile(board_with_bomb, {0, 1}) do
         NewBoard.reveal_tile(board_with_bomb, tile)
-        |> NewFloodFiller.flood_fill(tile)
+        |> NewFloodFiller.flood_fill({0, 1})
       end
 
     assert format(flood_filled_board) == [
@@ -176,7 +174,7 @@ defmodule NewFloodFillerTest do
     flood_filled_board =
       with {:ok, tile} <- NewBoard.get_tile(board_with_bomb, {0, 2}) do
         NewBoard.reveal_tile(board_with_bomb, tile)
-        |> NewFloodFiller.flood_fill(tile)
+        |> NewFloodFiller.flood_fill({0, 2})
       end
 
     assert format(flood_filled_board) == [
@@ -198,7 +196,7 @@ defmodule NewFloodFillerTest do
     flood_filled_board =
       with {:ok, tile} <- NewBoard.get_tile(board_with_bomb, {0, 2}) do
         NewBoard.reveal_tile(board_with_bomb, tile)
-        |> NewFloodFiller.flood_fill(tile)
+        |> NewFloodFiller.flood_fill({0, 2})
       end
 
     assert format(flood_filled_board) == [
@@ -222,7 +220,7 @@ defmodule NewFloodFillerTest do
     flood_filled_board =
       with {:ok, tile} <- NewBoard.get_tile(board_with_bombs, {0, 5}) do
         NewBoard.reveal_tile(board_with_bombs, tile)
-        |> NewFloodFiller.flood_fill(tile)
+        |> NewFloodFiller.flood_fill({0, 5})
       end
 
     assert format(flood_filled_board) == [

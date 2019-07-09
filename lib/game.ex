@@ -17,42 +17,39 @@ defmodule Game do
       {:exit, _} ->
         nil
 
-      {action, location} when action == :flag or action == :move ->
-        case action do
-          :flag ->
-            case Board.flag_or_unflag_tile(game_state.board, location) do
-              {:ok, board} ->
-                game_state
-                |> GameState.set_board(board)
-                |> play()
+      {:flag, location} ->
+        case NewBoard.flag_or_unflag_tile(game_state.board, location) do
+          {:ok, board} ->
+            game_state
+            |> GameState.set_board(board)
+            |> play()
 
-              {:error, :out_of_bounds} ->
-                "That move is out of bounds. Please enter a valid location."
-                |> try_again_with_message(game_state)
-            end
+          {:error, :out_of_bounds} ->
+            "That move is out of bounds. Please enter a valid location."
+            |> try_again_with_message(game_state)
+        end
 
-          :move ->
-            case Board.select_tile(game_state.board, location) do
-              {:ok, board} ->
-                board =
-                  board
-                  |> BombPlacer.place_bombs(
-                    game_state.config.randomizer,
-                    game_state.number_of_bombs
-                  )
-                  |> AdjacentBombCount.set_adjacent_bomb_counts()
-                  |> FloodFiller.flood_fill(location)
+      {:move, location} ->
+        case NewBoard.select_tile(game_state.board, location) do
+          {:ok, board} ->
+            board =
+              NewBombPlacer.place_bombs(
+                board,
+                game_state.config.randomizer,
+                game_state.number_of_bombs
+              )
+              |> NewAdjacentBombCount.set_adjacent_bomb_counts()
+              |> NewFloodFiller.flood_fill(location)
 
-                game_state
-                |> GameState.set_board(board)
-                |> GameState.set_status(:in_progress)
-                |> check_for_win_or_loss()
-                |> play()
+            game_state
+            |> GameState.set_board(board)
+            |> GameState.set_status(:in_progress)
+            |> check_for_win_or_loss()
+            |> play()
 
-              {:error, :out_of_bounds} ->
-                "That move is out of bounds. Please enter a valid location."
-                |> try_again_with_message(game_state)
-            end
+          {:error, :out_of_bounds} ->
+            "That move is out of bounds. Please enter a valid location."
+            |> try_again_with_message(game_state)
         end
 
       # explicit with 'when'?
@@ -74,7 +71,7 @@ defmodule Game do
         nil
 
       {:flag, location} ->
-        case Board.flag_or_unflag_tile(game_state.board, location) do
+        case NewBoard.flag_or_unflag_tile(game_state.board, location) do
           {:ok, board} ->
             game_state
             |> GameState.set_board(board)
@@ -91,7 +88,7 @@ defmodule Game do
         end
 
       {:move, location} ->
-        case Board.select_tile_with_floodfill(game_state.board, location) do
+        case NewBoard.select_tile_with_floodfill(game_state.board, location) do
           {:ok, board} ->
             game_state
             |> GameState.set_board(board)

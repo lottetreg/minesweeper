@@ -5,7 +5,10 @@ defmodule FinalBoardPresenter do
   @bomb "*"
   @border "|"
 
+  # improve this
   def present(board) do
+    board = Enum.chunk_every(board, NewBoard.col_count(board))
+
     rows_with_numbers =
       Enum.map(Enum.with_index(board), fn {row, row_number} ->
         Enum.reduce(row, "#{row_number} |", &present_tile/2) <> "\n"

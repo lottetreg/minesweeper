@@ -2,7 +2,7 @@ defmodule BoardPresenterTest do
   use ExUnit.Case
 
   test "returns a list representation of the given blank board" do
-    board = Board.new().board
+    board = NewBoard.new().board
 
     presented_board = BoardPresenter.present(board)
 
@@ -26,9 +26,12 @@ defmodule BoardPresenterTest do
   end
 
   test "returns a list representation of the given board with selected tiles" do
-    board = Board.reveal_tile(Board.new().board, {2, 5})
+    board = NewBoard.new().board
+    {:ok, tile} = NewBoard.get_tile(board, {2, 5})
 
-    presented_board = BoardPresenter.present(board)
+    presented_board =
+      NewBoard.reveal_tile(NewBoard.new().board, tile)
+      |> BoardPresenter.present()
 
     expected_presented_board = [
       "   A B C D E F G H I J\n",

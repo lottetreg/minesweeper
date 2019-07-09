@@ -3,10 +3,10 @@ defmodule FinalBoardPresenterTest do
 
   test "present/1 distinguishes between flagged empty tiles and flagged bomb tiles" do
     board =
-      Board.new().board
-      |> Board.flag_tile({0, 0})
-      |> Board.replace_tile({4, 4}, Tile.new(:bomb))
-      |> Board.flag_tile({4, 4})
+      NewBoard.new().board
+      |> NewBoard.flag_tile({0, 0})
+      |> NewBoard.replace_tile({4, 4}, Tile.new(:bomb))
+      |> NewBoard.flag_tile({4, 4})
 
     presented_board = FinalBoardPresenter.present(board)
 
@@ -31,10 +31,10 @@ defmodule FinalBoardPresenterTest do
 
   test "present/1 shows hidden and revealed bomb tiles" do
     board =
-      Board.new().board
-      |> Board.replace_tile({4, 4}, Tile.new(:bomb))
-      |> Board.replace_tile({0, 0}, Tile.new(:bomb))
-      |> Board.reveal_tile({0, 0})
+      NewBoard.new().board
+      |> NewBoard.replace_tile({4, 4}, Tile.new(:bomb))
+      |> NewBoard.replace_tile({0, 0}, Tile.new(:bomb))
+      |> NewBoard.reveal_tile({0, 0})
 
     presented_board = FinalBoardPresenter.present(board)
 
